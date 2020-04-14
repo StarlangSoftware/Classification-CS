@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Classification.Attribute;
+using Classification.FeatureSelection;
 
 namespace Classification.DataSet
 {
@@ -43,12 +44,14 @@ namespace Classification.DataSet
         public int DiscreteAttributeCount()
         {
             var count = 0;
-            foreach (var attributeType in _attributeTypes) {
+            foreach (var attributeType in _attributeTypes)
+            {
                 if (attributeType.Equals(AttributeType.DISCRETE) || attributeType.Equals(AttributeType.BINARY))
                 {
                     count++;
                 }
             }
+
             return count;
         }
 
@@ -60,12 +63,14 @@ namespace Classification.DataSet
         public int ContinuousAttributeCount()
         {
             var count = 0;
-            foreach (var attributeType in _attributeTypes) {
+            foreach (var attributeType in _attributeTypes)
+            {
                 if (attributeType.Equals(AttributeType.CONTINUOUS))
                 {
                     count++;
                 }
             }
+
             return count;
         }
 
@@ -108,5 +113,21 @@ namespace Classification.DataSet
             _attributeTypes.Clear();
         }
 
+        /**
+         * <summary>Generates new subset of attribute types by using given feature subset.</summary>
+         *
+         * <param name="featureSubSet">{@link FeatureSubSet} input.</param>
+         * <returns>DataDefinition with new subset of attribute types.</returns>
+         */
+        public DataDefinition GetSubSetOfFeatures(FeatureSubSet featureSubSet)
+        {
+            var newAttributeTypes = new List<AttributeType>();
+            for (int i = 0; i < featureSubSet.Size(); i++)
+            {
+                newAttributeTypes.Add(_attributeTypes[featureSubSet.Get(i)]);
+            }
+
+            return new DataDefinition(newAttributeTypes);
+        }
     }
 }

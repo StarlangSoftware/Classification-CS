@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Classification.Attribute;
+using Classification.FeatureSelection;
 using Classification.Instance;
 
 namespace Classification.DataSet
@@ -375,6 +376,23 @@ namespace Classification.DataSet
         public DataDefinition GetDataDefinition()
         {
             return _definition;
+        }
+
+        /**
+         * <summary>Return a subset generated via the given {@link FeatureSubSet}.</summary>
+         *
+         * <param name="featureSubSet">{@link FeatureSubSet} input.</param>
+         * <returns>Subset generated via the given {@link FeatureSubSet}.</returns>
+         */
+        public DataSet GetSubSetOfFeatures(FeatureSubSet featureSubSet)
+        {
+            DataSet result = new DataSet(_definition.GetSubSetOfFeatures(featureSubSet));
+            for (int i = 0; i < _instances.Size(); i++)
+            {
+                result.AddInstance(_instances.Get(i).GetSubSetOfFeatures(featureSubSet));
+            }
+
+            return result;
         }
 
         /**

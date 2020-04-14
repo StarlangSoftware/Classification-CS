@@ -1,3 +1,5 @@
+using Classification.FeatureSelection;
+
 namespace Classification.Experiment
 {
     public class Experiment
@@ -45,5 +47,15 @@ namespace Classification.Experiment
         {
             return _dataSet;
         }
+        
+        /**
+         * <summary>Construct and returns a feature selection experiment.</summary>
+         * <param name="featureSubSet">Feature subset used in the feature selection experiment</param>
+         * <returns>Experiment constructed</returns>
+         */
+        public Experiment FeatureSelectedExperiment(FeatureSubSet featureSubSet) {
+            return new Experiment(_classifier, _parameter, _dataSet.GetSubSetOfFeatures(featureSubSet));
+        }
+
     }
 }

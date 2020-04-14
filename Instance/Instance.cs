@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Classification.Attribute;
+using Classification.FeatureSelection;
 using Math;
 
 namespace Classification.Instance
@@ -124,9 +125,11 @@ namespace Classification.Instance
         public int ContinuousAttributeSize()
         {
             var size = 0;
-            foreach (var attribute in _attributes) {
+            foreach (var attribute in _attributes)
+            {
                 size += attribute.ContinuousAttributeSize();
             }
+
             return size;
         }
 
@@ -139,9 +142,11 @@ namespace Classification.Instance
         public List<double> ContinuousAttributes()
         {
             var result = new List<double>();
-            foreach (var attribute in _attributes) {
+            foreach (var attribute in _attributes)
+            {
                 result = result.Union(attribute.ContinuousAttributes()).ToList();
             }
+
             return result;
         }
 
@@ -163,10 +168,30 @@ namespace Classification.Instance
         public override string ToString()
         {
             var result = "";
-            foreach (var attribute in _attributes) {
+            foreach (var attribute in _attributes)
+            {
                 result = result + attribute + ",";
             }
+
             result += _classLabel;
+            return result;
+        }
+
+        /**
+         * <summary>The getSubSetOfFeatures method takes a {@link FeatureSubSet} as an input. First it creates a result {@link Instance}
+         * with the class label, and adds the attributes of the given featureSubSet to it.</summary>
+         *
+         * <param name="featureSubSet">{@link FeatureSubSet} an {@link ArrayList} of indices.</param>
+         * <returns>result Instance.</returns>
+         */
+        public Instance GetSubSetOfFeatures(FeatureSubSet featureSubSet)
+        {
+            var result = new Instance(_classLabel);
+            for (var i = 0; i < featureSubSet.Size(); i++)
+            {
+                result.AddAttribute(_attributes[featureSubSet.Get(i)]);
+            }
+
             return result;
         }
 
@@ -178,9 +203,11 @@ namespace Classification.Instance
         public Vector ToVector()
         {
             var values = new List<double>();
-            foreach (var attribute in _attributes) {
+            foreach (var attribute in _attributes)
+            {
                 values = values.Union(attribute.ContinuousAttributes()).ToList();
             }
+
             return new Vector(values);
         }
     }
