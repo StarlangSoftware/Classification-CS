@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Classification.Attribute
 {
-    public class DiscreteIndexed : DiscreteAttribute
+    public class DiscreteIndexedAttribute : DiscreteAttribute
     {
         private readonly int _index;
         private readonly int _maxIndex;
@@ -14,7 +14,7 @@ namespace Classification.Attribute
          * <param name="index">Index of the attribute.</param>
          * <param name="maxIndex">Maximum index of the attribute.</param>
          */
-        public DiscreteIndexed(string value, int index, int maxIndex) : base(value)
+        public DiscreteIndexedAttribute(string value, int index, int maxIndex) : base(value)
         {
             this._index = index;
             this._maxIndex = maxIndex;
