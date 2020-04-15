@@ -56,7 +56,7 @@ namespace Classification.DataSet
                             double.Parse(attributes[j]);
                             _definition.AddAttribute(AttributeType.CONTINUOUS);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                             _definition.AddAttribute(AttributeType.DISCRETE);
                         }
