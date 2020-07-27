@@ -9,7 +9,7 @@
 
     <ItemGroup>
       <PackageReference Include="NlpToolkit-DataStructure" Version="1.0.1" />
-      <PackageReference Include="NlpToolkit-Math" Version="1.0.1" />
+      <PackageReference Include="NlpToolkit-Math" Version="1.0.2" />
       <PackageReference Include="NlpToolkit-Sampling" Version="1.0.1" />
     </ItemGroup>
 
