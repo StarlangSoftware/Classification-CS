@@ -17,15 +17,15 @@ namespace Test.Filter
             var normalize = new Normalize(iris);
             normalize.Convert();
             linearPerceptron.Train(iris.GetInstanceList(), linearPerceptronParameter);
-            Assert.AreEqual(3.33, 100 * linearPerceptron.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
+            Assert.AreEqual(2.67, 100 * linearPerceptron.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
             normalize = new Normalize(bupa);
             normalize.Convert();
             linearPerceptron.Train(bupa.GetInstanceList(), linearPerceptronParameter);
-            Assert.AreEqual(34.20, 100 * linearPerceptron.Test(bupa.GetInstanceList()).GetErrorRate(), 0.01);
+            Assert.AreEqual(31.59, 100 * linearPerceptron.Test(bupa.GetInstanceList()).GetErrorRate(), 0.01);
             normalize = new Normalize(dermatology);
             normalize.Convert();
             linearPerceptron.Train(dermatology.GetInstanceList(), linearPerceptronParameter);
-            Assert.AreEqual(1.37, 100 * linearPerceptron.Test(dermatology.GetInstanceList()).GetErrorRate(), 0.01);
+            Assert.AreEqual(1.09, 100 * linearPerceptron.Test(dermatology.GetInstanceList()).GetErrorRate(), 0.01);
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace Test.Filter
             normalize = new Normalize(bupa);
             normalize.Convert();
             multiLayerPerceptron.Train(bupa.GetInstanceList(), multiLayerPerceptronParameter);
-            Assert.AreEqual(19.71, 100 * multiLayerPerceptron.Test(bupa.GetInstanceList()).GetErrorRate(), 0.01);
+            Assert.AreEqual(24.06, 100 * multiLayerPerceptron.Test(bupa.GetInstanceList()).GetErrorRate(), 0.01);
             multiLayerPerceptronParameter = new MultiLayerPerceptronParameter(1, 0.1, 0.99, 0.2, 100, 20);
             normalize = new Normalize(dermatology);
             normalize.Convert();

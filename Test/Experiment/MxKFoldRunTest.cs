@@ -2,7 +2,6 @@ using Classification.Classifier;
 using Classification.DistanceMetric;
 using Classification.Experiment;
 using Classification.Parameter;
-using Classification.Performance;
 using NUnit.Framework;
 using Test.Classifier;
 

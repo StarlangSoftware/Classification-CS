@@ -18,11 +18,11 @@ namespace Test.Filter
             var discreteToIndexed = new DiscreteToIndexed(car);
             discreteToIndexed.Convert();
             linearPerceptron.Train(car.GetInstanceList(), linearPerceptronParameter);
-            Assert.AreEqual(13.31, 100 * linearPerceptron.Test(car.GetInstanceList()).GetErrorRate(), 0.01);
+            Assert.AreEqual(8.80, 100 * linearPerceptron.Test(car.GetInstanceList()).GetErrorRate(), 0.01);
             discreteToIndexed = new DiscreteToIndexed(tictactoe);
             discreteToIndexed.Convert();
             linearPerceptron.Train(tictactoe.GetInstanceList(), linearPerceptronParameter);
-            Assert.AreEqual(19.31, 100 * linearPerceptron.Test(tictactoe.GetInstanceList()).GetErrorRate(), 0.01);
+            Assert.AreEqual(1.67, 100 * linearPerceptron.Test(tictactoe.GetInstanceList()).GetErrorRate(), 0.01);
         }
 
         [Test]

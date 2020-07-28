@@ -17,16 +17,16 @@ namespace Test.Filter
             var pca = new Pca(iris);
             pca.Convert();
             linearPerceptron.Train(iris.GetInstanceList(), linearPerceptronParameter);
-            Assert.AreEqual(20.67, 100 * linearPerceptron.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
+            Assert.AreEqual(8.67, 100 * linearPerceptron.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
             linearPerceptronParameter = new LinearPerceptronParameter(1, 0.01, 0.99, 0.2, 100);
             pca = new Pca(bupa);
             pca.Convert();
             linearPerceptron.Train(bupa.GetInstanceList(), linearPerceptronParameter);
-            Assert.AreEqual(37.68, 100 * linearPerceptron.Test(bupa.GetInstanceList()).GetErrorRate(), 0.01);
+            Assert.AreEqual(42.03, 100 * linearPerceptron.Test(bupa.GetInstanceList()).GetErrorRate(), 0.01);
             pca = new Pca(dermatology);
             pca.Convert();
             linearPerceptron.Train(dermatology.GetInstanceList(), linearPerceptronParameter);
-            Assert.AreEqual(1.91, 100 * linearPerceptron.Test(dermatology.GetInstanceList()).GetErrorRate(), 0.01);
+            Assert.AreEqual(1.64, 100 * linearPerceptron.Test(dermatology.GetInstanceList()).GetErrorRate(), 0.01);
         }
 
         [Test]

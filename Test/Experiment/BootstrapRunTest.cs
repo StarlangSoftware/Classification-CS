@@ -31,10 +31,10 @@ namespace Test.Experiment
             Assert.AreEqual(2.61, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
             experimentPerformance = bootstrapRun.Execute(new Classification.Experiment.Experiment(new LinearPerceptron(),
                 new LinearPerceptronParameter(1, 0.1, 0.99, 0.2, 100), iris));
-            Assert.AreEqual(4.37, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
+            Assert.AreEqual(3.07, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
             experimentPerformance = bootstrapRun.Execute(new Classification.Experiment.Experiment(new LinearPerceptron(),
                 new LinearPerceptronParameter(1, 0.1, 0.99, 0.2, 100), dermatology));
-            Assert.AreEqual(5.17, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
+            Assert.AreEqual(2.84, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
             experimentPerformance = bootstrapRun.Execute(new Classification.Experiment.Experiment(new NaiveBayes(), new Parameter(1), car));
             Assert.AreEqual(14.19, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
             experimentPerformance = bootstrapRun.Execute(new Classification.Experiment.Experiment(new NaiveBayes(), new Parameter(1), nursery));

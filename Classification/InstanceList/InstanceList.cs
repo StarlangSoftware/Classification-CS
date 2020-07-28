@@ -148,6 +148,7 @@ namespace Classification.InstanceList
          */
         public void Shuffle(int seed)
         {
+            KFoldCrossValidation<Instance.Instance>.Shuffle(_list, new Random(seed));
         }
 
         /**
