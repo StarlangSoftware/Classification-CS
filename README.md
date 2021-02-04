@@ -1,7 +1,7 @@
 For Developers
 ============
 
-You can also see [Java](https://github.com/olcaytaner/Classification), [Python](https://github.com/olcaytaner/Classification-Py), [Cython](https://github.com/olcaytaner/Classification-Cy), or [C++](https://github.com/olcaytaner/Classification-CPP) repository.
+You can also see [Java](https://github.com/starlangsoftware/Classification), [Python](https://github.com/starlangsoftware/Classification-Py), [Cython](https://github.com/starlangsoftware/Classification-Cy), or [C++](https://github.com/starlangsoftware/Classification-CPP) repository.
 
 Detailed Description
 ============
