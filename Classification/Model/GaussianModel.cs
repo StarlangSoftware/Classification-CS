@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Classification.Instance;
 using Math;
 
@@ -56,6 +57,11 @@ namespace Classification.Model
             }
 
             return predictedClass;
+        }
+        
+        public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
+        {
+            return null;
         }
     }
 }

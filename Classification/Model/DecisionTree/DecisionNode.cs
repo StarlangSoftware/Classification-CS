@@ -347,5 +347,23 @@ namespace Classification.Model.DecisionTree
 
             return _classLabel;
         }
+        
+        public Dictionary<string, double> PredictProbabilityDistribution(Instance.Instance instance)
+        {
+            if (_leaf)
+            {
+                return _data.ClassDistribution().GetProbabilityDistribution();
+            }
+
+            foreach (var node in _children)
+            {
+                if (node._condition.Satisfy(instance))
+                {
+                    return node.PredictProbabilityDistribution(instance);
+                }
+            }
+
+            return _data.ClassDistribution().GetProbabilityDistribution();
+        }
     }
 }

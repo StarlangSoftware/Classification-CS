@@ -40,5 +40,16 @@ namespace Classification.Model
                 return _classLabels[index];
             }
         }
+
+        public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
+        {
+            var result = new Dictionary<string, double>();
+            foreach (string classLabel in _classLabels)
+            {
+                result[classLabel] = 1.0 / _classLabels.Count;
+            }
+
+            return result;
+        }
     }
 }

@@ -32,5 +32,14 @@ namespace Classification.Model
             }
             return distribution.GetMaxItem();
         }
+
+        public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
+        {
+            var distribution = new DiscreteDistribution();
+            foreach (var tree in _forest) {
+                distribution.AddItem(tree.Predict(instance));
+            }
+            return distribution.GetProbabilityDistribution();
+        }
     }
 }

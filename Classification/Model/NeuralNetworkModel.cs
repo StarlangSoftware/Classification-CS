@@ -163,11 +163,23 @@ namespace Classification.Model
             CreateInputVector(instance);
 
             CalculateOutput();
-            if (instance is CompositeInstance compositeInstance) {
+            if (instance is CompositeInstance compositeInstance)
+            {
                 return PredictWithCompositeInstance(compositeInstance.GetPossibleClassLabels());
             }
 
             return classLabels[y.MaxIndex()];
+        }
+
+        public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
+        {
+            var result = new Dictionary<string, double>();
+            for (var i = 0; i < classLabels.Count; i++)
+            {
+                result[classLabels[i]] = y.GetValue(i);
+            }
+
+            return result;
         }
     }
 }

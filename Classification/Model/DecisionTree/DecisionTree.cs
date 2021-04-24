@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Classification.Instance;
 
 namespace Classification.Model.DecisionTree
@@ -30,6 +31,11 @@ namespace Classification.Model.DecisionTree
                 predictedClass = ((CompositeInstance) instance).GetPossibleClassLabels()[0];
             }
             return predictedClass;
+        }
+
+        public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
+        {
+            return _root.PredictProbabilityDistribution(instance);
         }
 
         /**

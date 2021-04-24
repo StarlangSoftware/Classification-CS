@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Classification.Model
 {
     public abstract class Model
@@ -9,6 +11,7 @@ namespace Classification.Model
          * <returns>The class label as a String.</returns>
          */
         public abstract string Predict(Instance.Instance instance);
-        
+
+        public abstract Dictionary<string, double> PredictProbability(Instance.Instance instance);
     }
 }

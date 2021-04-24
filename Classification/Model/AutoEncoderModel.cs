@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Classification.Parameter;
 using Math;
 
@@ -118,6 +119,11 @@ namespace Classification.Model
         protected override void CalculateOutput()
         {
             CalculateForwardSingleHiddenLayer(_W, _V);
+        }
+
+        public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
+        {
+            return null;
         }
     }
 }

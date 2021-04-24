@@ -42,6 +42,12 @@ namespace Classification.Model
             return predictedClass;
         }
 
+        public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
+        {
+            var nearestNeighbors = NearestNeighbors(instance);
+            return nearestNeighbors.ClassDistribution().GetProbabilityDistribution();
+        }
+
         /**
          * <summary> The nearestNeighbors method takes an {@link Instance} as an input. First it gets the possible class labels, then loops
          * through the data {@link InstanceList} and creates new {@link ArrayList} of {@link KnnInstance}s and adds the corresponding data with
