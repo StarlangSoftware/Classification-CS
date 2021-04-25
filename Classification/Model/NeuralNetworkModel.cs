@@ -173,6 +173,9 @@ namespace Classification.Model
 
         public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
         {
+            CreateInputVector(instance);
+
+            CalculateOutput();
             var result = new Dictionary<string, double>();
             for (var i = 0; i < classLabels.Count; i++)
             {
