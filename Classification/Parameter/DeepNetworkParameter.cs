@@ -5,6 +5,7 @@ namespace Classification.Parameter
     public class DeepNetworkParameter : LinearPerceptronParameter
     {
         private readonly List<int> _hiddenLayers;
+        private readonly ActivationFunction _activationFunction;
 
         /**
          * <summary> Parameters of the deep network classifier.</summary>
@@ -15,11 +16,13 @@ namespace Classification.Parameter
          * <param name="crossValidationRatio">Double value for cross validation ratio of the algorithm.</param>
          * <param name="epoch">               Integer value for epoch number of the algorithm.</param>
          * <param name="hiddenLayers">        An integer {@link ArrayList} for hidden layers of the algorithm.</param>
+         * <param name="activationFunction">         Activation function.</param>
          */
         public DeepNetworkParameter(int seed, double learningRate, double etaDecrease, double crossValidationRatio,
-            int epoch, List<int> hiddenLayers) : base(seed, learningRate, etaDecrease, crossValidationRatio, epoch)
+            int epoch, List<int> hiddenLayers, ActivationFunction activationFunction) : base(seed, learningRate, etaDecrease, crossValidationRatio, epoch)
         {
             this._hiddenLayers = hiddenLayers;
+            this._activationFunction = activationFunction;
         }
 
         /**
@@ -43,5 +46,16 @@ namespace Classification.Parameter
         {
             return _hiddenLayers[layerIndex];
         }
+        
+        /**
+         * <summary> Accessor for the activation function.</summary>
+         *
+         * <returns>The activation function.</returns>
+         */
+        public ActivationFunction GetActivationFunction()
+        {
+            return _activationFunction;
+        }
+        
     }
 }

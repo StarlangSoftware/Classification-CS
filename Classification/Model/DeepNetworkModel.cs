@@ -10,6 +10,7 @@ namespace Classification.Model
     {
         private List<Matrix> _weights;
         private int _hiddenLayerSize;
+        private ActivationFunction _activationFunction;
 
         /**
          * <summary> The allocateWeights method takes {@link DeepNetworkParameter}s as an input. First it adds random weights to the {@link List}
@@ -66,11 +67,15 @@ namespace Classification.Model
             var deltaWeights = new List<Matrix>();
             var hidden = new List<Vector>();
             var hiddenBiased = new List<Vector>();
+            _activationFunction = parameters.GetActivationFunction();
             AllocateWeights(parameters);
             var bestWeights = SetBestWeights();
             var bestClassificationPerformance = new ClassificationPerformance(0.0);
             var epoch = parameters.GetEpoch();
-            var learningRate = parameters.GetLearningRate();
+            var learningRate = parameters.GetLearningRate(); 
+            Vector tmph;
+            var tmpHidden = new Vector(1, 0.0);
+            var activationDerivative = new Vector(1, 0.0);
             for (var i = 0; i < epoch; i++)
             {
                 trainSet.Shuffle(parameters.GetSeed());
@@ -84,11 +89,11 @@ namespace Classification.Model
                     {
                         if (k == 0)
                         {
-                            hidden.Add(CalculateHidden(x, _weights[k]));
+                            hidden.Add(CalculateHidden(x, _weights[k], _activationFunction));
                         }
                         else
                         {
-                            hidden.Add(CalculateHidden(hiddenBiased[k - 1], _weights[k]));
+                            hidden.Add(CalculateHidden(hiddenBiased[k - 1], _weights[k], _activationFunction));
                         }
 
                         hiddenBiased.Add(hidden[k].Biased());
@@ -99,10 +104,32 @@ namespace Classification.Model
                     deltaWeights.Insert(0, rMinusY.Multiply(hiddenBiased[_hiddenLayerSize - 1]));
                     for (var k = _weights.Count - 2; k >= 0; k--)
                     {
-                        var oneMinusHidden = CalculateOneMinusHidden(hidden[k]);
-                        var tmph = deltaWeights[0].ElementProduct(_weights[k + 1]).SumOfRows();
+                        if (k == _weights.Count - 2)
+                        {
+                            tmph = _weights[k + 1].MultiplyWithVectorFromLeft(rMinusY);
+                        }
+                        else
+                        {
+                            tmph = _weights[k + 1].MultiplyWithVectorFromLeft(tmpHidden);
+                        }
                         tmph.Remove(0);
-                        var tmpHidden = oneMinusHidden.ElementProduct(tmph);
+                        switch (_activationFunction)
+                        {
+                            case ActivationFunction.SIGMOID:
+                                var oneMinusHidden = CalculateOneMinusHidden(hidden[k]);
+                                activationDerivative = oneMinusHidden.ElementProduct(hidden[k]);
+                                break;
+                            case ActivationFunction.TANH:
+                                var one = new Vector(hidden.Count, 1.0);
+                                hidden[k].Tanh();
+                                activationDerivative = one.Difference(hidden[k].ElementProduct(hidden[k]));
+                                break;
+                            case ActivationFunction.RELU:
+                                hidden[k].ReluDerivative();
+                                activationDerivative = hidden[k];
+                                break;
+                        }
+                        tmpHidden = tmph.ElementProduct(activationDerivative);
                         if (k == 0)
                         {
                             deltaWeights.Insert(0, tmpHidden.Multiply(x));
@@ -149,11 +176,11 @@ namespace Classification.Model
                 Vector hidden;
                 if (i == 0)
                 {
-                    hidden = CalculateHidden(x, _weights[i]);
+                    hidden = CalculateHidden(x, _weights[i], _activationFunction);
                 }
                 else
                 {
-                    hidden = CalculateHidden(hiddenBiased, _weights[i]);
+                    hidden = CalculateHidden(hiddenBiased, _weights[i], _activationFunction);
                 }
 
                 hiddenBiased = hidden.Biased();

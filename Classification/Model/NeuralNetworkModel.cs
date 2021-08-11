@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Classification.Instance;
+using Classification.Parameter;
 using Math;
 
 namespace Classification.Model
@@ -72,13 +73,25 @@ namespace Classification.Model
          * Matrix with given input Vector than applies the sigmoid function and returns the result.</summary>
          *
          * <param name="input">  Vector to multiply weights.</param>
-         * <param name="weights">Matrix is multiplied with input Vector.</param>
+         * <param name="weights"> Matrix is multiplied with input Vector.</param>
+         * <param name="activationFunction"> Activation function.</param>
          * <returns>Result of sigmoid function.</returns>
          */
-        protected Vector CalculateHidden(Vector input, Matrix weights)
+        protected Vector CalculateHidden(Vector input, Matrix weights, ActivationFunction activationFunction)
         {
             var z = weights.MultiplyWithVectorFromRight(input);
-            z.Sigmoid();
+            switch (activationFunction)
+            {
+                case ActivationFunction.SIGMOID:
+                    z.Sigmoid();
+                    break;
+                case ActivationFunction.TANH:
+                    z.Tanh();
+                    break;
+                case ActivationFunction.RELU:
+                    z.Relu();
+                    break;
+            }
             return z;
         }
 
@@ -101,10 +114,11 @@ namespace Classification.Model
          *
          * <param name="W">Matrix to multiply with x.</param>
          * <param name="V">Matrix to multiply.</param>
+         * <param name="activationFunction"> Activation function.</param>
          */
-        protected void CalculateForwardSingleHiddenLayer(Matrix W, Matrix V)
+        protected void CalculateForwardSingleHiddenLayer(Matrix W, Matrix V, ActivationFunction activationFunction)
         {
-            var hidden = CalculateHidden(x, W);
+            var hidden = CalculateHidden(x, W, activationFunction);
             var hiddenBiased = hidden.Biased();
             y = V.MultiplyWithVectorFromRight(hiddenBiased);
         }

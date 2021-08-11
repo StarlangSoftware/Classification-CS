@@ -48,7 +48,7 @@ namespace Classification.Model
                 {
                     CreateInputVector(trainSet.Get(j));
                     r = trainSet.Get(j).ToVector();
-                    var hidden = CalculateHidden(x, _W);
+                    var hidden = CalculateHidden(x, _W, ActivationFunction.SIGMOID);
                     var hiddenBiased = hidden.Biased();
                     y = _V.MultiplyWithVectorFromRight(hiddenBiased);
                     var rMinusY = r.Difference(y);
@@ -109,7 +109,7 @@ namespace Classification.Model
         private Vector PredictInput(Instance.Instance instance)
         {
             CreateInputVector(instance);
-            CalculateForwardSingleHiddenLayer(_W, _V);
+            CalculateForwardSingleHiddenLayer(_W, _V, ActivationFunction.SIGMOID);
             return y;
         }
 
@@ -118,7 +118,7 @@ namespace Classification.Model
          */
         protected override void CalculateOutput()
         {
-            CalculateForwardSingleHiddenLayer(_W, _V);
+            CalculateForwardSingleHiddenLayer(_W, _V, ActivationFunction.SIGMOID);
         }
 
         public override Dictionary<string, double> PredictProbability(Instance.Instance instance)

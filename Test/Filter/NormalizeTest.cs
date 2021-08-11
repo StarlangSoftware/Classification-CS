@@ -33,17 +33,17 @@ namespace Test.Filter
         {
             var multiLayerPerceptron = new MultiLayerPerceptron();
             var multiLayerPerceptronParameter =
-                new MultiLayerPerceptronParameter(1, 1, 0.99, 0.2, 100, 3);
+                new MultiLayerPerceptronParameter(1, 1, 0.99, 0.2, 100, 3, ActivationFunction.SIGMOID);
             var normalize = new Normalize(iris);
             normalize.Convert();
             multiLayerPerceptron.Train(iris.GetInstanceList(), multiLayerPerceptronParameter);
             Assert.AreEqual(3.33, 100 * multiLayerPerceptron.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
-            multiLayerPerceptronParameter = new MultiLayerPerceptronParameter(1, 0.5, 0.99, 0.2, 100, 30);
+            multiLayerPerceptronParameter = new MultiLayerPerceptronParameter(1, 0.5, 0.99, 0.2, 100, 30, ActivationFunction.SIGMOID);
             normalize = new Normalize(bupa);
             normalize.Convert();
             multiLayerPerceptron.Train(bupa.GetInstanceList(), multiLayerPerceptronParameter);
             Assert.AreEqual(24.06, 100 * multiLayerPerceptron.Test(bupa.GetInstanceList()).GetErrorRate(), 0.01);
-            multiLayerPerceptronParameter = new MultiLayerPerceptronParameter(1, 0.1, 0.99, 0.2, 100, 20);
+            multiLayerPerceptronParameter = new MultiLayerPerceptronParameter(1, 0.1, 0.99, 0.2, 100, 20, ActivationFunction.SIGMOID);
             normalize = new Normalize(dermatology);
             normalize.Convert();
             multiLayerPerceptron.Train(dermatology.GetInstanceList(), multiLayerPerceptronParameter);

@@ -8,6 +8,7 @@ namespace Classification.Model
     public class MultiLayerPerceptronModel : LinearPerceptronModel
     {
         private Matrix _V;
+        private ActivationFunction _activationFunction;
 
         /**
          * <summary> The allocateWeights method allocates layers' weights of Matrix W and V.</summary>
@@ -33,26 +34,43 @@ namespace Classification.Model
         public MultiLayerPerceptronModel(InstanceList.InstanceList trainSet, InstanceList.InstanceList validationSet,
             MultiLayerPerceptronParameter parameters) : base(trainSet)
         {
+            _activationFunction = parameters.GetActivationFunction();
             AllocateWeights(parameters.GetHiddenNodes(), new Random(parameters.GetSeed()));
             var bestW = (Matrix) W.Clone();
             var bestV = (Matrix) _V.Clone();
             var bestClassificationPerformance = new ClassificationPerformance(0.0);
             var epoch = parameters.GetEpoch();
             var learningRate = parameters.GetLearningRate();
+            var activationDerivative = new Vector(1, 0.0);
             for (var i = 0; i < epoch; i++)
             {
                 trainSet.Shuffle(parameters.GetSeed());
                 for (var j = 0; j < trainSet.Size(); j++)
                 {
                     CreateInputVector(trainSet.Get(j));
-                    var hidden = CalculateHidden(x, W);
+                    var hidden = CalculateHidden(x, W, _activationFunction);
                     var hiddenBiased = hidden.Biased();
                     var rMinusY = CalculateRMinusY(trainSet.Get(j), hiddenBiased, _V);
                     var deltaV = rMinusY.Multiply(hiddenBiased);
-                    var oneMinusHidden = CalculateOneMinusHidden(hidden);
                     var tmph = _V.MultiplyWithVectorFromLeft(rMinusY);
                     tmph.Remove(0);
-                    var tmpHidden = oneMinusHidden.ElementProduct(hidden.ElementProduct(tmph));
+                    switch (_activationFunction)
+                    {
+                        case ActivationFunction.SIGMOID:
+                            var oneMinusHidden = CalculateOneMinusHidden(hidden);
+                            activationDerivative = oneMinusHidden.ElementProduct(hidden);
+                            break;
+                        case ActivationFunction.TANH:
+                            var one = new Vector(hidden.Size(), 1.0);
+                            hidden.Tanh();
+                            activationDerivative = one.Difference(hidden.ElementProduct(hidden));
+                            break;
+                        case ActivationFunction.RELU:
+                            hidden.ReluDerivative();
+                            activationDerivative = hidden;
+                            break;
+                    }
+                    var tmpHidden = tmph.ElementProduct(activationDerivative);
                     var deltaW = tmpHidden.Multiply(x);
                     deltaV.MultiplyWithConstant(learningRate);
                     _V.Add(deltaV);
@@ -80,7 +98,7 @@ namespace Classification.Model
          */
         protected override void CalculateOutput()
         {
-            CalculateForwardSingleHiddenLayer(W, _V);
+            CalculateForwardSingleHiddenLayer(W, _V, _activationFunction);
         }
     }
 }
