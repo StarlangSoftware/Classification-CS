@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using Classification.Attribute;
 using Classification.Instance;
 using Classification.Parameter;
 using Classification.Performance;
 using Math;
+using Util;
 
 namespace Classification.Model.DecisionTree
 {
@@ -59,18 +61,20 @@ namespace Classification.Model.DecisionTree
                 return;
             }
 
-            var indexList = new List<int>();
-            for (var i = 0; i < data.Get(0).AttributeSize(); i++)
-            {
-                indexList.Add(i);
-            }
+            List<int> indexList;
 
             if (parameter != null && parameter.GetAttributeSubsetSize() < data.Get(0).AttributeSize())
             {
+                indexList = RandomArray.IndexArray(data.Get(0).AttributeSize(), new Random(parameter.GetSeed()));
                 size = parameter.GetAttributeSubsetSize();
             }
             else
             {
+                indexList = new List<int>();
+                for (var i = 0; i < data.Get(0).AttributeSize(); i++)
+                {
+                    indexList.Add(i);
+                }
                 size = data.Get(0).AttributeSize();
             }
 

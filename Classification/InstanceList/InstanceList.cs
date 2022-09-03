@@ -7,6 +7,7 @@ using Classification.DataSet;
 using Classification.Instance;
 using Math;
 using Sampling;
+using Util;
 
 namespace Classification.InstanceList
 {
@@ -287,9 +288,7 @@ namespace Classification.InstanceList
             partition.Add(new InstanceList());
             var distribution = ClassDistribution();
             var counts = new int[distribution.Count];
-            var randomArray = new List<int>();
-            for (var i = 0; i < Size(); i++)
-                randomArray.Add(i);
+            var randomArray = RandomArray.IndexArray(Size(), random);
             for (var i = 0; i < Size(); i++)
             {
                 var instance = _list[randomArray[i]];
