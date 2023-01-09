@@ -4,14 +4,14 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>NlpToolkit-Classification</PackageId>
-        <PackageVersion>1.0.6</PackageVersion>
+        <PackageVersion>1.0.7</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="NlpToolkit-DataStructure" Version="1.0.2" />
-      <PackageReference Include="NlpToolkit-Math" Version="1.0.5" />
+      <PackageReference Include="NlpToolkit-DataStructure" Version="1.0.5" />
+      <PackageReference Include="NlpToolkit-Math" Version="1.0.6" />
       <PackageReference Include="NlpToolkit-Sampling" Version="1.0.3" />
-      <PackageReference Include="NlpToolkit-Util" Version="1.0.5" />
+      <PackageReference Include="NlpToolkit-Util" Version="1.0.6" />
     </ItemGroup>
 
 </Project>
