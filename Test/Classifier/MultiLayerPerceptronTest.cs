@@ -13,13 +13,13 @@ namespace Test.Classifier
             var multiLayerPerceptronParameter =
                 new MultiLayerPerceptronParameter(1, 0.1, 0.99, 0.2, 100, 3, ActivationFunction.SIGMOID);
             multiLayerPerceptron.Train(iris.GetInstanceList(), multiLayerPerceptronParameter);
-            Assert.AreEqual(5.33, 100 * multiLayerPerceptron.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
+            Assert.AreEqual(2.67, 100 * multiLayerPerceptron.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
             multiLayerPerceptronParameter = new MultiLayerPerceptronParameter(1, 0.01, 0.99, 0.2, 100, 30, ActivationFunction.SIGMOID);
             multiLayerPerceptron.Train(bupa.GetInstanceList(), multiLayerPerceptronParameter);
-            Assert.AreEqual(28.69, 100 * multiLayerPerceptron.Test(bupa.GetInstanceList()).GetErrorRate(), 0.01);
+            Assert.AreEqual(30.43, 100 * multiLayerPerceptron.Test(bupa.GetInstanceList()).GetErrorRate(), 0.01);
             multiLayerPerceptronParameter = new MultiLayerPerceptronParameter(1, 0.01, 0.99, 0.2, 100, 20, ActivationFunction.SIGMOID);
             multiLayerPerceptron.Train(dermatology.GetInstanceList(), multiLayerPerceptronParameter);
-            Assert.AreEqual(1.91, 100 * multiLayerPerceptron.Test(dermatology.GetInstanceList()).GetErrorRate(), 0.01);
+            Assert.AreEqual(2.46, 100 * multiLayerPerceptron.Test(dermatology.GetInstanceList()).GetErrorRate(), 0.01);
         }
     }
 }

@@ -16,10 +16,10 @@ namespace Test.Experiment
             var kFoldRun = new KFoldRun(10);
             var experimentPerformance =
                 kFoldRun.Execute(new Classification.Experiment.Experiment(new C45(), new C45Parameter(1, true, 0.2), iris));
-            Assert.AreEqual(6.00, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
+            Assert.AreEqual(6.67, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
             experimentPerformance =
                 kFoldRun.Execute(new Classification.Experiment.Experiment(new C45(), new C45Parameter(1, true, 0.2), tictactoe));
-            Assert.AreEqual(16.39, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
+            Assert.AreEqual(17.22, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
             experimentPerformance =
                 kFoldRun.Execute(new Classification.Experiment.Experiment(new Knn(), new KnnParameter(1, 3, new EuclidianDistance()), bupa));
             Assert.AreEqual(37.44, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
@@ -32,10 +32,10 @@ namespace Test.Experiment
             Assert.AreEqual(2.18, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
             experimentPerformance = kFoldRun.Execute(new Classification.Experiment.Experiment(new LinearPerceptron(),
                 new LinearPerceptronParameter(1, 0.1, 0.99, 0.2, 100), iris));
-            Assert.AreEqual(2.67, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
+            Assert.AreEqual(3.33, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
             experimentPerformance = kFoldRun.Execute(new Classification.Experiment.Experiment(new LinearPerceptron(),
                 new LinearPerceptronParameter(1, 0.1, 0.99, 0.2, 100), dermatology));
-            Assert.AreEqual(4.89, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
+            Assert.AreEqual(3.54, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
             experimentPerformance = kFoldRun.Execute(new Classification.Experiment.Experiment(new NaiveBayes(), new Parameter(1), car));
             Assert.AreEqual(14.64, 100 * experimentPerformance.MeanPerformance().GetErrorRate(), 0.01);
             experimentPerformance = kFoldRun.Execute(new Classification.Experiment.Experiment(new NaiveBayes(), new Parameter(1), nursery));

@@ -19,18 +19,18 @@ namespace Test.StatisticalTest
             var experimentPerformance2 = mxKFoldRun.Execute(new Classification.Experiment.Experiment(new LinearPerceptron(),
                 new LinearPerceptronParameter(1, 0.1, 0.99, 0.2, 100), iris));
             var combined5x2t = new Combined5x2t();
-            Assert.AreEqual(0.172, combined5x2t.Compare(experimentPerformance1, experimentPerformance2).GetPValue(),
+            Assert.AreEqual(0.549, combined5x2t.Compare(experimentPerformance1, experimentPerformance2).GetPValue(),
                 0.001);
             experimentPerformance1 =
                 mxKFoldRun.Execute(new Classification.Experiment.Experiment(new C45(), new C45Parameter(1, true, 0.2), tictactoe));
             experimentPerformance2 =
                 mxKFoldRun.Execute(new Classification.Experiment.Experiment(new Bagging(), new BaggingParameter(1, 50), tictactoe));
-            Assert.AreEqual(0.000016, combined5x2t.Compare(experimentPerformance1, experimentPerformance2).GetPValue(),
+            Assert.AreEqual(0.000029, combined5x2t.Compare(experimentPerformance1, experimentPerformance2).GetPValue(),
                 0.000001);
             experimentPerformance1 = mxKFoldRun.Execute(new Classification.Experiment.Experiment(new Lda(), new Parameter(1), dermatology));
             experimentPerformance2 = mxKFoldRun.Execute(new Classification.Experiment.Experiment(new LinearPerceptron(),
                 new LinearPerceptronParameter(1, 0.1, 0.99, 0.2, 100), dermatology));
-            Assert.AreEqual(0.5945, combined5x2t.Compare(experimentPerformance1, experimentPerformance2).GetPValue(),
+            Assert.AreEqual(0.5716, combined5x2t.Compare(experimentPerformance1, experimentPerformance2).GetPValue(),
                 0.0001);
             experimentPerformance1 = mxKFoldRun.Execute(new Classification.Experiment.Experiment(new Dummy(), new Parameter(1), nursery));
             experimentPerformance2 = mxKFoldRun.Execute(new Classification.Experiment.Experiment(new NaiveBayes(), new Parameter(1), nursery));

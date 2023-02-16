@@ -20,19 +20,19 @@ namespace Test.StatisticalTest
             var experimentPerformance2 = mxKFoldRun.Execute(new Classification.Experiment.Experiment(new LinearPerceptron(),
                 new LinearPerceptronParameter(1, 0.1, 0.99, 0.2, 100), iris));
             var combined5x2F = new Combined5x2F();
-            Assert.AreEqual(0.581, combined5x2F.Compare(experimentPerformance1, experimentPerformance2).GetPValue(),
+            Assert.AreEqual(0.734, combined5x2F.Compare(experimentPerformance1, experimentPerformance2).GetPValue(),
                 0.001);
             experimentPerformance1 =
                 mxKFoldRun.Execute(new Classification.Experiment.Experiment(new C45(), new C45Parameter(1, true, 0.2), tictactoe));
             experimentPerformance2 =
                 mxKFoldRun.Execute(new Classification.Experiment.Experiment(new Bagging(), new BaggingParameter(1, 50), tictactoe));
-            Assert.AreEqual(0.002, combined5x2F.Compare(experimentPerformance1, experimentPerformance2).GetPValue(),
+            Assert.AreEqual(0.003, combined5x2F.Compare(experimentPerformance1, experimentPerformance2).GetPValue(),
                 0.001);
             experimentPerformance1 = mxKFoldRun.Execute(new Classification.Experiment.Experiment(new Lda(), new Parameter(1), dermatology));
             experimentPerformance2 = mxKFoldRun.Execute(new Classification.Experiment.Experiment(new LinearPerceptron(),
                 new LinearPerceptronParameter(1, 0.1, 0.99, 0.2, 100), dermatology));
-            Assert.AreEqual(0.4793, combined5x2F.Compare(experimentPerformance1, experimentPerformance2).GetPValue(),
-                0.0001);
+            Assert.AreEqual(0.647, combined5x2F.Compare(experimentPerformance1, experimentPerformance2).GetPValue(),
+                0.001);
             experimentPerformance1 = mxKFoldRun.Execute(new Classification.Experiment.Experiment(new Dummy(), new Parameter(1), nursery));
             experimentPerformance2 = mxKFoldRun.Execute(new Classification.Experiment.Experiment(new NaiveBayes(), new Parameter(1), nursery));
             Assert.AreEqual(0.0, combined5x2F.Compare(experimentPerformance1, experimentPerformance2).GetPValue(), 0.0001);

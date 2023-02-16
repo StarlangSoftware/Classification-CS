@@ -19,17 +19,17 @@ namespace Test.StatisticalTest
             var experimentPerformance2 = kFoldRun.Execute(new Classification.Experiment.Experiment(new LinearPerceptron(),
                 new LinearPerceptronParameter(1, 0.1, 0.99, 0.2, 100), iris));
             var pairedt = new Pairedt();
-            Assert.AreEqual(0.136, pairedt.Compare(experimentPerformance1, experimentPerformance2).GetPValue(), 0.001);
+            Assert.AreEqual(0.122, pairedt.Compare(experimentPerformance1, experimentPerformance2).GetPValue(), 0.001);
             experimentPerformance1 =
                 kFoldRun.Execute(new Classification.Experiment.Experiment(new C45(), new C45Parameter(1, true, 0.2), tictactoe));
             experimentPerformance2 =
                 kFoldRun.Execute(new Classification.Experiment.Experiment(new Bagging(), new BaggingParameter(1, 50), tictactoe));
-            Assert.AreEqual(0.00000006, pairedt.Compare(experimentPerformance1, experimentPerformance2).GetPValue(),
-                0.00000001);
+            Assert.AreEqual(0.0000016, pairedt.Compare(experimentPerformance1, experimentPerformance2).GetPValue(),
+                0.000001);
             experimentPerformance1 = kFoldRun.Execute(new Classification.Experiment.Experiment(new Lda(), new Parameter(1), dermatology));
             experimentPerformance2 = kFoldRun.Execute(new Classification.Experiment.Experiment(new LinearPerceptron(),
                 new LinearPerceptronParameter(1, 0.1, 0.99, 0.2, 100), dermatology));
-            Assert.AreEqual(0.2935, pairedt.Compare(experimentPerformance1, experimentPerformance2).GetPValue(), 0.0001);
+            Assert.AreEqual(0.6693, pairedt.Compare(experimentPerformance1, experimentPerformance2).GetPValue(), 0.0001);
             experimentPerformance1 = kFoldRun.Execute(new Classification.Experiment.Experiment(new Dummy(), new Parameter(1), nursery));
             experimentPerformance2 = kFoldRun.Execute(new Classification.Experiment.Experiment(new NaiveBayes(), new Parameter(1), nursery));
             Assert.AreEqual(0.0, pairedt.Compare(experimentPerformance1, experimentPerformance2).GetPValue(), 0.0000001);

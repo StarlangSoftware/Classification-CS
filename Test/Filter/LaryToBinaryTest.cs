@@ -32,15 +32,15 @@ namespace Test.Filter
             var laryToBinary = new LaryToBinary(car);
             laryToBinary.Convert();
             c45.Train(car.GetInstanceList(), c45Parameter);
-            Assert.AreEqual(10.76, 100 * c45.Test(car.GetInstanceList()).GetErrorRate(), 0.01);
+            Assert.AreEqual(2.31, 100 * c45.Test(car.GetInstanceList()).GetErrorRate(), 0.01);
             laryToBinary = new LaryToBinary(tictactoe);
             laryToBinary.Convert();
             c45.Train(tictactoe.GetInstanceList(), c45Parameter);
-            Assert.AreEqual(16.08, 100 * c45.Test(tictactoe.GetInstanceList()).GetErrorRate(), 0.01);
+            Assert.AreEqual(7.52, 100 * c45.Test(tictactoe.GetInstanceList()).GetErrorRate(), 0.01);
             laryToBinary = new LaryToBinary(nursery);
             laryToBinary.Convert();
             c45.Train(nursery.GetInstanceList(), c45Parameter);
-            Assert.AreEqual(24.95, 100 * c45.Test(nursery.GetInstanceList()).GetErrorRate(), 0.01);
+            Assert.AreEqual(0.42, 100 * c45.Test(nursery.GetInstanceList()).GetErrorRate(), 0.01);
         }
     }
 }
