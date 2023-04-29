@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Classification.Parameter;
 using Classification.Performance;
 using Math;
@@ -18,6 +19,17 @@ namespace Classification.Model
         {
         }
 
+        public LinearPerceptronModel()
+        {
+            
+        }
+        public LinearPerceptronModel(string fileName)
+        {
+            var input = new StreamReader(fileName);
+            LoadClassLabels(input);
+            W = LoadMatrix(input);
+            input.Close();
+        }
         /**
          * <summary> Constructor that takes {@link InstanceList}s as trainsSet and validationSet. Initially it allocates layer weights,
          * then creates an input vector by using given trainSet and finds error. Via the validationSet it finds the classification

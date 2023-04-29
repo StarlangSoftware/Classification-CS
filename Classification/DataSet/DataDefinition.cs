@@ -7,6 +7,7 @@ namespace Classification.DataSet
     public class DataDefinition
     {
         private readonly List<AttributeType> _attributeTypes;
+        private readonly string[][] _attributeValueList;
 
         /**
          * <summary> Constructor for creating a new {@link DataDefinition}.</summary>
@@ -23,7 +24,32 @@ namespace Classification.DataSet
          */
         public DataDefinition(List<AttributeType> attributeTypes)
         {
-            this._attributeTypes = attributeTypes;
+            _attributeTypes = attributeTypes;
+        }
+
+        /**
+         * <summary>Constructor for creating a new <see cref="DataDefinition"/> with given attribute types.</summary>
+         *
+         * <param name="attributeTypes"> Attribute types of the data definition.</param>
+         * <param name="attributeValueList"> Array of array of strings to represent all possible values of discrete features.</param>
+         */
+        public DataDefinition(List<AttributeType> attributeTypes, string[][] attributeValueList)
+        {
+            _attributeTypes = attributeTypes;
+            _attributeValueList = attributeValueList;
+        }
+
+        public int NumberOfValues(int attributeIndex){
+            return _attributeValueList[attributeIndex].Length;
+        }
+
+        public int FeatureValueIndex(int attributeIndex, string value){
+            for (var i = 0; i < _attributeValueList[attributeIndex].Length; i++){
+                if (_attributeValueList[attributeIndex][i].Equals(value)){
+                    return i;
+                }
+            }
+            return -1;
         }
 
         /**

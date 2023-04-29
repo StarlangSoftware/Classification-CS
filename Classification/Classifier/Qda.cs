@@ -41,5 +41,10 @@ namespace Classification.Classifier
 
             model = new QdaModel(priorDistribution, W, w, w0);
         }
+
+        public override void LoadModel(string fileName)
+        {
+            model = new QdaModel(fileName);
+        }
     }
 }

@@ -45,5 +45,10 @@ namespace Classification.Classifier
 
             model = new LdaModel(priorDistribution, w, w0);
         }
+
+        public override void LoadModel(string fileName)
+        {
+            model = new LdaModel(fileName);
+        }
     }
 }

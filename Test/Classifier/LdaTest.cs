@@ -16,5 +16,18 @@ namespace Test.Classifier
             lda.Train(dermatology.GetInstanceList(), null);
             Assert.AreEqual(1.91, 100 * lda.Test(dermatology.GetInstanceList()).GetErrorRate(), 0.01);
         }
+        
+        [Test]
+        public void TestLoad()
+        {
+            var lda = new Lda();
+            lda.LoadModel("../../../models/lda-iris.txt");
+            Assert.AreEqual(2.00, 100 * lda.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
+            lda.LoadModel("../../../models/lda-bupa.txt");
+            Assert.AreEqual(29.57, 100 * lda.Test(bupa.GetInstanceList()).GetErrorRate(), 0.01);
+            lda.LoadModel("../../../models/lda-dermatology.txt");
+            Assert.AreEqual(1.91, 100 * lda.Test(dermatology.GetInstanceList()).GetErrorRate(), 0.01);
+        }
+
     }
 }

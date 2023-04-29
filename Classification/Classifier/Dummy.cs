@@ -15,5 +15,10 @@ namespace Classification.Classifier
         {
             model = new DummyModel(trainSet);
         }
+
+        public override void LoadModel(string fileName)
+        {
+            model = new DummyModel(fileName);
+        }
     }
 }

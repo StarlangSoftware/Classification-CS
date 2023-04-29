@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Classification.Attribute;
 using Classification.Instance;
 using Classification.Parameter;
@@ -184,6 +185,36 @@ namespace Classification.Model.DecisionTree
             }
         }
 
+        public DecisionNode(StreamReader input)
+        {
+            var line = input.ReadLine();
+            var items = line.Split(" ");
+            if (!items[0].Equals("-1")){
+                if (items[1][0] == '='){
+                    _condition = new DecisionCondition(int.Parse(items[0]), items[1][0], new DiscreteAttribute(items[2]));
+                } else {
+                    if (items[1][0] == ':'){
+                        _condition = new DecisionCondition(int.Parse(items[0]), '=', new DiscreteIndexedAttribute("", int.Parse(items[2]), int.Parse(items[3])));
+                    } else {
+                        _condition = new DecisionCondition(int.Parse(items[0]), items[1][0], new ContinuousAttribute(Double.Parse(items[2])));
+                    }
+                }
+            } else {
+                _condition = null;
+            }
+            var numberOfChildren = int.Parse(input.ReadLine());
+            if (numberOfChildren != 0){
+                _leaf = false;
+                _children = new List<DecisionNode>();
+                for (var i = 0; i < numberOfChildren; i++){
+                    _children.Add(new DecisionNode(input));
+                }
+            } else {
+                _leaf = true;
+                _classLabel = input.ReadLine();
+            }
+        }
+        
         /**
          * <summary> The entropyForDiscreteAttribute method takes an attributeIndex and creates an List of DiscreteDistribution.
          * Then loops through the distributions and calculates the total entropy.</summary>

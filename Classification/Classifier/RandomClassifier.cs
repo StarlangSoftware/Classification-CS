@@ -15,6 +15,10 @@ namespace Classification.Classifier
         public override void Train(InstanceList.InstanceList trainSet, Parameter.Parameter parameters) {
             model = new RandomModel(new List<String>(trainSet.ClassDistribution().Keys), parameters.GetSeed());
         }
-        
+
+        public override void LoadModel(string fileName)
+        {
+            model = new RandomModel(fileName);
+        }
     }
 }

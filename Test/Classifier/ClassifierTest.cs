@@ -7,7 +7,7 @@ namespace Test.Classifier
 {
     public class ClassifierTest
     {
-        protected Classification.DataSet.DataSet iris, car, chess, bupa, tictactoe, dermatology, nursery;
+        protected Classification.DataSet.DataSet iris, car, chess, bupa, tictactoe, dermatology, nursery, carIndexed, tictactoeIndexed;
 
         [SetUp]
         public void SetUp()
@@ -46,6 +46,22 @@ namespace Test.Classifier
             dataDefinition = new DataDefinition(attributeTypes);
             car = new Classification.DataSet.DataSet(dataDefinition, ",", "../../../datasets/car.data");
             attributeTypes = new List<AttributeType>();
+            var attributeValueList = new string[6][];
+            attributeValueList[0] = new [] { "vhigh", "high", "low", "med" };
+            attributeValueList[1] = new [] { "vhigh", "high", "low", "med" };
+            attributeValueList[2] = new [] { "2", "3", "4", "5more" };
+            attributeValueList[3] = new [] { "2", "4", "more" };
+            attributeValueList[4] = new [] { "big", "med", "small" };
+            attributeValueList[5] = new [] { "high", "low", "med" };
+            for (var i = 0; i < 6; i++)
+            {
+                attributeTypes.Add(AttributeType.DISCRETE_INDEXED);
+            }
+
+            dataDefinition = new DataDefinition(attributeTypes, attributeValueList);
+            carIndexed = new Classification.DataSet.DataSet(dataDefinition, ",", "../../../datasets/car.data");
+
+            attributeTypes = new List<AttributeType>();
             for (var i = 0; i < 9; i++)
             {
                 attributeTypes.Add(AttributeType.DISCRETE);
@@ -53,6 +69,15 @@ namespace Test.Classifier
 
             dataDefinition = new DataDefinition(attributeTypes);
             tictactoe = new Classification.DataSet.DataSet(dataDefinition, ",", "../../../datasets/tictactoe.data");
+            attributeTypes = new List<AttributeType>();
+            attributeValueList = new string[9][];
+            for (int i = 0; i < 9; i++){
+                attributeTypes.Add(AttributeType.DISCRETE_INDEXED);
+                attributeValueList[i] = new []{"b", "o", "x"};
+            }
+            dataDefinition = new DataDefinition(attributeTypes, attributeValueList);
+            tictactoeIndexed = new Classification.DataSet.DataSet(dataDefinition, ",", "../../../datasets/tictactoe.data");
+
             attributeTypes = new List<AttributeType>();
             for (var i = 0; i < 8; i++)
             {

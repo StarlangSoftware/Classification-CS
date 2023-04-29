@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using Classification.Instance;
 using Math;
 
@@ -15,7 +16,23 @@ namespace Classification.Model
          */
         public DummyModel(InstanceList.InstanceList trainSet)
         {
-            this._distribution = trainSet.ClassDistribution();
+            _distribution = trainSet.ClassDistribution();
+        }
+
+        public DummyModel(string fileName)
+        {
+            var input = new StreamReader(fileName);
+            _distribution = new DiscreteDistribution();
+            var size = int.Parse(input.ReadLine());
+            for (var i = 0; i < size; i++){
+                var line = input.ReadLine();
+                var items = line.Split(" ");
+                var count = int.Parse(items[1]);
+                for(var j = 0; j < count; j++){
+                    _distribution.AddItem(items[0]);
+                }
+            }
+            input.Close();
         }
 
         /**

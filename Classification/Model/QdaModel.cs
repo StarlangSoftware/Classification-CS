@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using Math;
 
 namespace Classification.Model
@@ -19,9 +20,22 @@ namespace Classification.Model
             Dictionary<string, Vector> w,
             Dictionary<string, double> w0) : base(priorDistribution, w, w0)
         {
-            this._W = W;
+            _W = W;
         }
 
+        public QdaModel(string fileName)
+        {
+            var input = new StreamReader(fileName);
+            var size = LoadPriorDistribution(input);
+            LoadWandW0(input, size);
+            _W = new Dictionary<string, Matrix>();
+            for (var i = 0; i < size; i++){
+                var c = input.ReadLine();
+                var matrix = LoadMatrix(input);
+                _W[c] = matrix;
+            }
+            input.Close();
+        }
         /**
          * <summary> The calculateMetric method takes an {@link Instance} and a String as inputs. It multiplies Matrix Wi with Vector xi
          * then calculates the dot product of it with xi. Then, again it finds the dot product of wi and xi and returns the summation with w0i.</summary>

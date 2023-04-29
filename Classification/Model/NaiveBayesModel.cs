@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Classification.Attribute;
 using Math;
 
@@ -22,8 +23,8 @@ namespace Classification.Model
             Dictionary<string, Vector> classDeviations)
         {
             this.priorDistribution = priorDistribution;
-            this._classMeans = classMeans;
-            this._classDeviations = classDeviations;
+            _classMeans = classMeans;
+            _classDeviations = classDeviations;
         }
 
         /**
@@ -36,7 +37,16 @@ namespace Classification.Model
             Dictionary<string, List<DiscreteDistribution>> classAttributeDistributions)
         {
             this.priorDistribution = priorDistribution;
-            this._classAttributeDistributions = classAttributeDistributions;
+            _classAttributeDistributions = classAttributeDistributions;
+        }
+
+        public NaiveBayesModel(string fileName)
+        {
+            var input = new StreamReader(fileName);
+            var size = LoadPriorDistribution(input);
+            _classMeans = LoadVectors(input, size);
+            _classDeviations = LoadVectors(input, size);
+            input.Close();
         }
 
         /**
@@ -74,7 +84,10 @@ namespace Classification.Model
                 var xi = ((ContinuousAttribute) instance.GetAttribute(i)).GetValue();
                 var mi = _classMeans[classLabel].GetValue(i);
                 var si = _classDeviations[classLabel].GetValue(i);
-                logLikelihood += -0.5 * System.Math.Pow((xi - mi) / si, 2);
+                if (si != 0)
+                {
+                    logLikelihood += -0.5 * System.Math.Pow((xi - mi) / si, 2);
+                }
             }
 
             return logLikelihood;

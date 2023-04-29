@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using Classification.Instance;
 
 namespace Classification.Model.DecisionTree
@@ -14,7 +15,14 @@ namespace Classification.Model.DecisionTree
          */
         public DecisionTree(DecisionNode root)
         {
-            this._root = root;
+            _root = root;
+        }
+
+        public DecisionTree(string fileName)
+        {
+            var input = new StreamReader(fileName);
+            _root = new DecisionNode(input);
+            input.Close();
         }
 
         /**

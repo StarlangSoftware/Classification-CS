@@ -58,6 +58,11 @@ namespace Classification.InstanceList
                             case AttributeType.DISCRETE:
                                 current.AddAttribute(new DiscreteAttribute(attributeList[i]));
                                 break;
+                            case AttributeType.DISCRETE_INDEXED:
+                                current.AddAttribute(new DiscreteIndexedAttribute(attributeList[i],
+                                    definition.FeatureValueIndex(i, attributeList[i]),
+                                    definition.NumberOfValues(i)));
+                                break;
                             case AttributeType.BINARY:
                                 current.AddAttribute(new BinaryAttribute(bool.Parse(attributeList[i])));
                                 break;

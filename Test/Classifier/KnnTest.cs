@@ -23,5 +23,22 @@ namespace Test.Classifier
             knn.Train(tictactoe.GetInstanceList(), knnParameter);
             Assert.AreEqual(5.64, 100 * knn.Test(tictactoe.GetInstanceList()).GetErrorRate(), 0.01);
         }
+        
+        [Test]
+        public void TestLoad()
+        {
+            var knn = new Knn();
+            knn.LoadModel("../../../models/knn-iris.txt");
+            Assert.AreEqual(4.00, 100 * knn.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
+            knn.LoadModel("../../../models/knn-bupa.txt");
+            Assert.AreEqual(19.42, 100 * knn.Test(bupa.GetInstanceList()).GetErrorRate(), 0.01);
+            knn.LoadModel("../../../models/knn-dermatology.txt");
+            Assert.AreEqual(3.01, 100 * knn.Test(dermatology.GetInstanceList()).GetErrorRate(), 0.01);
+            knn.LoadModel("../../../models/knn-car.txt");
+            Assert.AreEqual(4.75, 100 * knn.Test(car.GetInstanceList()).GetErrorRate(), 0.01);
+            knn.LoadModel("../../../models/knn-tictactoe.txt");
+            Assert.AreEqual(5.64, 100 * knn.Test(tictactoe.GetInstanceList()).GetErrorRate(), 0.01);
+        }
+
     }
 }

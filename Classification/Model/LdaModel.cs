@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using Math;
 
 namespace Classification.Model
@@ -21,6 +23,31 @@ namespace Classification.Model
             this.priorDistribution = priorDistribution;
             this.w = w;
             this.w0 = w0;
+        }
+
+        public LdaModel()
+        {
+            
+        }
+        protected void LoadWandW0(StreamReader input, int size)
+        {
+            w0 = new Dictionary<string, double>();
+            for (var i = 0; i < size; i++)
+            {
+                var line = input.ReadLine();
+                var items = line.Split(" ");
+                w0[items[0]] =  Double.Parse(items[1]);
+            }
+
+            w = LoadVectors(input, size);
+        }
+
+        public LdaModel(string fileName)
+        {
+            var input = new StreamReader(fileName);
+            var size = LoadPriorDistribution(input);
+            LoadWandW0(input, size);
+            input.Close();
         }
 
         /**

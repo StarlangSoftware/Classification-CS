@@ -12,6 +12,8 @@ namespace Classification.Classifier
 
         public abstract void Train(InstanceList.InstanceList trainSet, Parameter.Parameter parameters);
 
+        public abstract void LoadModel(string fileName);
+        
         /**
          * <summary> Checks given instance's attribute and returns true if it is a discrete indexed attribute, false otherwise.</summary>
          *

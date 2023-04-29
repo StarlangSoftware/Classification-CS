@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Classification.Parameter;
 using Classification.Performance;
 using Math;
@@ -164,6 +165,18 @@ namespace Classification.Model
             }
         }
 
+        public DeepNetworkModel(string fileName)
+        {
+            var input = new StreamReader(fileName);
+            LoadClassLabels(input);
+            _hiddenLayerSize = int.Parse(input.ReadLine());
+            _weights = new List<Matrix>();
+            for (var i = 0; i < _hiddenLayerSize + 1; i++){
+                _weights.Add(LoadMatrix(input));
+            }
+            _activationFunction = LoadActivationFunction(input);
+            input.Close();
+        }
         /**
          * <summary> The calculateOutput method loops size of the weights times and calculate one hidden layer at a time and adds bias term.
          * At the end it updates the output y value.</summary>

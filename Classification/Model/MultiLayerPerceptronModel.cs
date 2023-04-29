@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Classification.Parameter;
 using Classification.Performance;
 using Math;
@@ -21,6 +22,16 @@ namespace Classification.Model
             _V = AllocateLayerWeights(K, H + 1, random);
         }
 
+        public MultiLayerPerceptronModel(string fileName)
+        {
+            var input = new StreamReader(fileName);
+            LoadClassLabels(input);
+            W = LoadMatrix(input);
+            _V = LoadMatrix(input);
+            _activationFunction = LoadActivationFunction(input);
+            input.Close();
+        }
+        
         /**
          * <summary> A constructor that takes {@link InstanceList}s as trainsSet and validationSet. It  sets the {@link NeuralNetworkModel}
          * nodes with given {@link InstanceList} then creates an input vector by using given trainSet and finds error.

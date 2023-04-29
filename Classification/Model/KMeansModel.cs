@@ -1,3 +1,5 @@
+using System.IO;
+using Classification.DistanceMetric;
 using Math;
 
 namespace Classification.Model
@@ -19,7 +21,16 @@ namespace Classification.Model
         {
             this._classMeans = classMeans;
             this.priorDistribution = priorDistribution;
-            this._distanceMetric = distanceMetric;
+            _distanceMetric = distanceMetric;
+        }
+
+        public KMeansModel(string fileName)
+        {
+            _distanceMetric = new EuclidianDistance();
+            var input = new StreamReader(fileName);
+            LoadPriorDistribution(input);
+            _classMeans = LoadInstanceList(input);
+            input.Close();
         }
 
         /**

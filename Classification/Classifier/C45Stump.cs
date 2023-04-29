@@ -14,5 +14,10 @@ namespace Classification.Classifier
         {
             model = new DecisionTree(new DecisionNode(trainSet, null, null, true));
         }
+
+        public override void LoadModel(string fileName)
+        {
+            model = new DecisionTree(fileName);
+        }
     }
 }

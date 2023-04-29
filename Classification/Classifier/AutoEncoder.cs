@@ -20,6 +20,11 @@ namespace Classification.Classifier
                 (MultiLayerPerceptronParameter) parameters);
         }
 
+        public override void LoadModel(string fileName)
+        {
+            
+        }
+
 
         /**
          * <summary> A performance test for an auto encoder with the given test set..</summary>

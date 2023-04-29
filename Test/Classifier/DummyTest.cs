@@ -24,5 +24,24 @@ namespace Test.Classifier
             Assert.AreEqual(83.77, 100 * dummy.Test(chess.GetInstanceList()).GetErrorRate(), 0.01);
         }
 
+        [Test]
+        public void TestLoad() {
+            var dummy = new Dummy();
+            dummy.LoadModel("../../../models/dummy-iris.txt");
+            Assert.AreEqual(66.67, 100 * dummy.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
+            dummy.LoadModel("../../../models/dummy-bupa.txt");
+            Assert.AreEqual(42.03, 100 * dummy.Test(bupa.GetInstanceList()).GetErrorRate(), 0.01);
+            dummy.LoadModel("../../../models/dummy-dermatology.txt");
+            Assert.AreEqual(69.40, 100 * dummy.Test(dermatology.GetInstanceList()).GetErrorRate(), 0.01);
+            dummy.LoadModel("../../../models/dummy-car.txt");
+            Assert.AreEqual(29.98, 100 * dummy.Test(car.GetInstanceList()).GetErrorRate(), 0.01);
+            dummy.LoadModel("../../../models/dummy-tictactoe.txt");
+            Assert.AreEqual(34.66, 100 * dummy.Test(tictactoe.GetInstanceList()).GetErrorRate(), 0.01);
+            dummy.LoadModel("../../../models/dummy-nursery.txt");
+            Assert.AreEqual(66.67, 100 * dummy.Test(nursery.GetInstanceList()).GetErrorRate(), 0.01);
+            dummy.LoadModel("../../../models/dummy-chess.txt");
+            Assert.AreEqual(83.77, 100 * dummy.Test(chess.GetInstanceList()).GetErrorRate(), 0.01);
+        }
+
     }
 }

@@ -21,5 +21,18 @@ namespace Test.Classifier
             multiLayerPerceptron.Train(dermatology.GetInstanceList(), multiLayerPerceptronParameter);
             Assert.AreEqual(2.46, 100 * multiLayerPerceptron.Test(dermatology.GetInstanceList()).GetErrorRate(), 0.01);
         }
+        
+        [Test]
+        public void TestLoad()
+        {
+            var multiLayerPerceptron = new MultiLayerPerceptron();
+            multiLayerPerceptron.LoadModel("../../../models/multiLayerPerceptron-iris.txt");
+            Assert.AreEqual(2.67, 100 * multiLayerPerceptron.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
+            multiLayerPerceptron.LoadModel("../../../models/multiLayerPerceptron-bupa.txt");
+            Assert.AreEqual(27.54, 100 * multiLayerPerceptron.Test(bupa.GetInstanceList()).GetErrorRate(), 0.01);
+            multiLayerPerceptron.LoadModel("../../../models/multiLayerPerceptron-dermatology.txt");
+            Assert.AreEqual(1.09, 100 * multiLayerPerceptron.Test(dermatology.GetInstanceList()).GetErrorRate(), 0.01);
+        }
+
     }
 }

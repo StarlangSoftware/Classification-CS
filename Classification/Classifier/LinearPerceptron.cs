@@ -21,5 +21,10 @@ namespace Classification.Classifier
             model = new LinearPerceptronModel(partition.Get(1), partition.Get(0),
                 (LinearPerceptronParameter) parameters);
         }
+
+        public override void LoadModel(string fileName)
+        {
+            model = new LinearPerceptronModel(fileName);
+        }
     }
 }

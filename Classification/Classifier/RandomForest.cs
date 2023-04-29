@@ -27,5 +27,10 @@ namespace Classification.Classifier
 
             model = new TreeEnsembleModel(forest);
         }
+
+        public override void LoadModel(string fileName)
+        {
+            model = new TreeEnsembleModel(fileName);
+        }
     }
 }

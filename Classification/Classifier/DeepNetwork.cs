@@ -18,5 +18,10 @@ namespace Classification.Classifier
                 ((DeepNetworkParameter) parameters).GetCrossValidationRatio(), new Random(parameters.GetSeed()));
             model = new DeepNetworkModel(partition.Get(1), partition.Get(0), (DeepNetworkParameter) parameters);
         }
+
+        public override void LoadModel(string fileName)
+        {
+            model = new DeepNetworkModel(fileName);
+        }
     }
 }

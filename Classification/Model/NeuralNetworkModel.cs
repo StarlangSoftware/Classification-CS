@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Classification.Instance;
 using Classification.Parameter;
 using Math;
@@ -24,6 +25,11 @@ namespace Classification.Model
             classLabels = trainSet.GetDistinctClassLabels();
             K = classLabels.Count;
             d = trainSet.Get(0).ContinuousAttributeSize();
+        }
+
+        public NeuralNetworkModel()
+        {
+            
         }
 
         /**
@@ -92,6 +98,7 @@ namespace Classification.Model
                     z.Relu();
                     break;
             }
+
             return z;
         }
 
@@ -197,6 +204,31 @@ namespace Classification.Model
             }
 
             return result;
+        }
+
+        protected void LoadClassLabels(StreamReader input)
+        {
+            var items = input.ReadLine().Split(" ");
+            K = int.Parse(items[0]);
+            d = int.Parse(items[1]);
+            classLabels = new List<string>();
+            for (var i = 0; i < K; i++)
+            {
+                classLabels.Add(input.ReadLine());
+            }
+        }
+
+        protected ActivationFunction LoadActivationFunction(StreamReader input)
+        {
+            switch (input.ReadLine())
+            {
+                case "TANH":
+                    return ActivationFunction.TANH;
+                case "RELU":
+                    return ActivationFunction.RELU;
+                default:
+                    return ActivationFunction.SIGMOID;
+            }
         }
     }
 }

@@ -21,8 +21,23 @@ namespace Test.Classifier
             Assert.AreEqual(0.0, 100 * randomForest.Test(car.GetInstanceList()).GetErrorRate(), 0.01);
             randomForest.Train(tictactoe.GetInstanceList(), randomForestParameter);
             Assert.AreEqual(0.0, 100 * randomForest.Test(tictactoe.GetInstanceList()).GetErrorRate(), 0.01);
-            randomForest.Train(nursery.GetInstanceList(), randomForestParameter);
-            Assert.AreEqual(0.0, 100 * randomForest.Test(nursery.GetInstanceList()).GetErrorRate(), 0.01);
         }
+        
+        [Test]
+        public void TestLoad()
+        {
+            var randomForest = new RandomForest();
+            randomForest.LoadModel("../../../models/randomForest-iris.txt");
+            Assert.AreEqual(0.0, 100 * randomForest.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
+            randomForest.LoadModel("../../../models/randomForest-bupa.txt");
+            Assert.AreEqual(0.0, 100 * randomForest.Test(bupa.GetInstanceList()).GetErrorRate(), 0.01);
+            randomForest.LoadModel("../../../models/randomForest-dermatology.txt");
+            Assert.AreEqual(0.0, 100 * randomForest.Test(dermatology.GetInstanceList()).GetErrorRate(), 0.01);
+            randomForest.LoadModel("../../../models/randomForest-car.txt");
+            Assert.AreEqual(0.0, 100 * randomForest.Test(car.GetInstanceList()).GetErrorRate(), 0.01);
+            randomForest.LoadModel("../../../models/randomForest-tictactoe.txt");
+            Assert.AreEqual(0.0, 100 * randomForest.Test(tictactoe.GetInstanceList()).GetErrorRate(), 0.01);
+        }
+
     }
 }

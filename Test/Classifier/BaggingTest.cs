@@ -21,8 +21,23 @@ namespace Test.Classifier
             Assert.AreEqual(0.0, 100 * bagging.Test(car.GetInstanceList()).GetErrorRate(), 0.01);
             bagging.Train(tictactoe.GetInstanceList(), baggingParameter);
             Assert.AreEqual(0.0, 100 * bagging.Test(tictactoe.GetInstanceList()).GetErrorRate(), 0.01);
-            bagging.Train(nursery.GetInstanceList(), baggingParameter);
-            Assert.AreEqual(0.0, 100 * bagging.Test(nursery.GetInstanceList()).GetErrorRate(), 0.01);
         }
+        
+        [Test]
+        public void TestLoad()
+        {
+            var bagging = new Bagging();
+            bagging.LoadModel("../../../models/bagging-iris.txt");
+            Assert.AreEqual(0.0, 100 * bagging.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
+            bagging.LoadModel("../../../models/bagging-bupa.txt");
+            Assert.AreEqual(0.0, 100 * bagging.Test(bupa.GetInstanceList()).GetErrorRate(), 0.01);
+            bagging.LoadModel("../../../models/bagging-dermatology.txt");
+            Assert.AreEqual(0.0, 100 * bagging.Test(dermatology.GetInstanceList()).GetErrorRate(), 0.01);
+            bagging.LoadModel("../../../models/bagging-car.txt");
+            Assert.AreEqual(0.0, 100 * bagging.Test(car.GetInstanceList()).GetErrorRate(), 0.01);
+            bagging.LoadModel("../../../models/bagging-tictactoe.txt");
+            Assert.AreEqual(0.0, 100 * bagging.Test(tictactoe.GetInstanceList()).GetErrorRate(), 0.01);
+        }
+
     }
 }

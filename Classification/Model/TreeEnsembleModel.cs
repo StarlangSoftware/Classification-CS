@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.IO;
+using Classification.Model.DecisionTree;
 using Math;
 
 namespace Classification.Model
@@ -14,9 +16,20 @@ namespace Classification.Model
          */
         public TreeEnsembleModel(List<DecisionTree.DecisionTree> forest)
         {
-            this._forest = forest;
+            _forest = forest;
         }
 
+        public TreeEnsembleModel(string fileName)
+        {
+            var input = new StreamReader(fileName);
+            var numberOfTrees = int.Parse(input.ReadLine());
+            _forest = new List<DecisionTree.DecisionTree>();
+            for (var i = 0; i < numberOfTrees; i++){
+                _forest.Add(new DecisionTree.DecisionTree(new DecisionNode(input)));
+            }
+            input.Close();
+        }
+        
         /**
          * <summary> The predict method takes an {@link Instance} as an input and loops through the {@link ArrayList} of {@link DecisionTree}s.
          * Makes prediction for the items of that ArrayList and returns the maximum item of that ArrayList.</summary>
@@ -27,8 +40,13 @@ namespace Classification.Model
         public override string Predict(Instance.Instance instance)
         {
             var distribution = new DiscreteDistribution();
-            foreach (var tree in _forest) {
-                distribution.AddItem(tree.Predict(instance));
+            foreach (var tree in _forest)
+            {
+                var predictedLabel = tree.Predict(instance);
+                if (predictedLabel != null)
+                {
+                    distribution.AddItem(predictedLabel);
+                }
             }
             return distribution.GetMaxItem();
         }

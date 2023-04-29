@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.IO;
+using Classification.DistanceMetric;
 using Classification.Instance;
 
 namespace Classification.Model
@@ -18,9 +20,18 @@ namespace Classification.Model
          */
         public KnnModel(InstanceList.InstanceList data, int k, DistanceMetric.DistanceMetric distanceMetric)
         {
-            this._data = data;
-            this._k = k;
-            this._distanceMetric = distanceMetric;
+            _data = data;
+            _k = k;
+            _distanceMetric = distanceMetric;
+        }
+
+        public KnnModel(string fileName)
+        {
+            _distanceMetric = new EuclidianDistance();
+            var input = new StreamReader(fileName);
+            _k = int.Parse(input.ReadLine());
+            _data = LoadInstanceList(input);
+            input.Close();
         }
 
         /**

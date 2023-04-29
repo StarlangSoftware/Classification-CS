@@ -23,5 +23,10 @@ namespace Classification.Classifier
             model = new MultiLayerPerceptronModel(partition.Get(1), partition.Get(0), (MultiLayerPerceptronParameter)
                 parameters);
         }
+
+        public override void LoadModel(string fileName)
+        {
+            model = new MultiLayerPerceptronModel(fileName);
+        }
     }
 }

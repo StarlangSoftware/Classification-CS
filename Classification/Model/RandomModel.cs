@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Classification.Instance;
 
 namespace Classification.Model
@@ -8,6 +9,7 @@ namespace Classification.Model
     {
         private readonly List<string> _classLabels;
         private Random random;
+        private int _seed;
 
         /**
          * <summary> A constructor that sets the class labels.</summary>
@@ -16,10 +18,24 @@ namespace Classification.Model
          */
         public RandomModel(List<string> classLabels, int seed)
         {
-            this._classLabels = classLabels;
-            this.random = new Random(seed);
+            _classLabels = classLabels;
+            _seed = seed;
+            random = new Random(seed);
         }
 
+        public RandomModel(string fileName)
+        {
+            var input = new StreamReader(fileName);
+            _seed = int.Parse(input.ReadLine());
+            random = new Random(_seed);
+            var size = int.Parse(input.ReadLine());
+            _classLabels = new List<string>();
+            for (var i = 0; i < size; i++){
+                _classLabels.Add(input.ReadLine());
+            }
+            input.Close();
+        }
+        
         /**
          * <summary> The predict method gets an Instance as an input and retrieves the possible class labels as an List. Then selects a
          * random number as an index and returns the class label at this selected index.</summary>

@@ -26,5 +26,18 @@ namespace Test.Classifier
             deepNetwork.Train(dermatology.GetInstanceList(), deepNetworkParameter);
             Assert.AreEqual(2.19, 100 * deepNetwork.Test(dermatology.GetInstanceList()).GetErrorRate(), 0.01);
         }
+        
+        [Test]
+        public void TestLoad()
+        {
+            var deepNetwork = new DeepNetwork();
+            deepNetwork.LoadModel("../../../models/deepNetwork-iris.txt");
+            Assert.AreEqual(1.33, 100 * deepNetwork.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
+            deepNetwork.LoadModel("../../../models/deepNetwork-bupa.txt");
+            Assert.AreEqual(28.99, 100 * deepNetwork.Test(bupa.GetInstanceList()).GetErrorRate(), 0.01);
+            deepNetwork.LoadModel("../../../models/deepNetwork-dermatology.txt");
+            Assert.AreEqual(1.09, 100 * deepNetwork.Test(dermatology.GetInstanceList()).GetErrorRate(), 0.01);
+        }
+
     }
 }

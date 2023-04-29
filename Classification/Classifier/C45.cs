@@ -30,5 +30,10 @@ namespace Classification.Classifier
 
             model = tree;
         }
+
+        public override void LoadModel(string fileName)
+        {
+            model = new DecisionTree(fileName);
+        }
     }
 }

@@ -64,5 +64,10 @@ namespace Classification.Classifier
                 TrainContinuousVersion(priorDistribution, classLists);
             }
         }
+
+        public override void LoadModel(string fileName)
+        {
+            model = new NaiveBayesModel(fileName);
+        }
     }
 }

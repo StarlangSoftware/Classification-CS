@@ -17,5 +17,10 @@ namespace Classification.Classifier
             model = new KnnModel(trainSet, ((KnnParameter) parameters).GetK(),
                 ((KnnParameter) parameters).GetDistanceMetric());
         }
+
+        public override void LoadModel(string fileName)
+        {
+            model = new KnnModel(fileName);
+        }
     }
 }

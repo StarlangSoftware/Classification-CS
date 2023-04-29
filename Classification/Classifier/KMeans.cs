@@ -23,5 +23,10 @@ namespace Classification.Classifier
 
             model = new KMeansModel(priorDistribution, classMeans, ((KMeansParameter) parameters).GetDistanceMetric());
         }
+
+        public override void LoadModel(string fileName)
+        {
+            model = new KMeansModel(fileName);
+        }
     }
 }
