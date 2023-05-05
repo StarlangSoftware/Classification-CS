@@ -22,16 +22,7 @@ namespace Classification.Model
         public DummyModel(string fileName)
         {
             var input = new StreamReader(fileName);
-            _distribution = new DiscreteDistribution();
-            var size = int.Parse(input.ReadLine());
-            for (var i = 0; i < size; i++){
-                var line = input.ReadLine();
-                var items = line.Split(" ");
-                var count = int.Parse(items[1]);
-                for(var j = 0; j < count; j++){
-                    _distribution.AddItem(items[0]);
-                }
-            }
+            _distribution = Model.LoadDiscreteDistribution(input);
             input.Close();
         }
 

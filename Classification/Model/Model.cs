@@ -30,6 +30,24 @@ namespace Classification.Model
             return instanceList;
         }
 
+        public static DiscreteDistribution LoadDiscreteDistribution(StreamReader input)
+        {
+            var distribution = new DiscreteDistribution();
+            var size = int.Parse(input.ReadLine());
+            for (var i = 0; i < size; i++)
+            {
+                var line = input.ReadLine();
+                var items = line.Split(" ");
+                int count = int.Parse(items[1]);
+                for (int j = 0; j < count; j++)
+                {
+                    distribution.AddItem(items[0]);
+                }
+            }
+
+            return distribution;
+        }
+
         protected Instance.Instance LoadInstance(string line, string[] attributeTypes)
         {
             var items = line.Split(",");
@@ -54,15 +72,17 @@ namespace Classification.Model
         {
             var items = input.ReadLine().Split(" ");
             var matrix = new Matrix(int.Parse(items[0]), int.Parse(items[1]));
-            for (var j = 0; j < matrix.GetRow(); j++){
+            for (var j = 0; j < matrix.GetRow(); j++)
+            {
                 var line = input.ReadLine();
                 items = line.Split(" ");
-                for (var k = 0; k < matrix.GetColumn(); k++){
+                for (var k = 0; k < matrix.GetColumn(); k++)
+                {
                     matrix.SetValue(j, k, Double.Parse(items[k]));
                 }
             }
+
             return matrix;
         }
-
     }
 }

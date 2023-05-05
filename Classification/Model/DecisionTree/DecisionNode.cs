@@ -4,7 +4,6 @@ using System.IO;
 using Classification.Attribute;
 using Classification.Instance;
 using Classification.Parameter;
-using Classification.Performance;
 using Math;
 using Util;
 
@@ -17,6 +16,7 @@ namespace Classification.Model.DecisionTree
         private readonly string _classLabel;
         private bool _leaf;
         private readonly DecisionCondition _condition;
+        private DiscreteDistribution _classLabelsDistribution;
 
         /**
          * <summary> The DecisionNode method takes {@link InstanceList} data as input and then it sets the class label parameter by finding
@@ -47,9 +47,14 @@ namespace Classification.Model.DecisionTree
         {
             int bestAttribute = -1, size;
             double bestSplitValue = 0;
-            this._condition = condition;
-            this._data = data;
-            _classLabel = Classifier.Classifier.GetMaximum(data.GetClassLabels());
+            _condition = condition;
+            _data = data;
+            _classLabelsDistribution = new DiscreteDistribution();
+            var labels = data.GetClassLabels();
+            foreach (var label in labels){
+                _classLabelsDistribution.AddItem(label);
+            }
+            _classLabel = Classifier.Classifier.GetMaximum(labels);
             _leaf = true;
             var classLabels = data.GetDistinctClassLabels();
             if (classLabels.Count == 1)
@@ -212,6 +217,7 @@ namespace Classification.Model.DecisionTree
             } else {
                 _leaf = true;
                 _classLabel = input.ReadLine();
+                _classLabelsDistribution = Model.LoadDiscreteDistribution(input);
             }
         }
         
@@ -387,7 +393,7 @@ namespace Classification.Model.DecisionTree
         {
             if (_leaf)
             {
-                return _data.ClassDistribution().GetProbabilityDistribution();
+                return _classLabelsDistribution.GetProbabilityDistribution();
             }
 
             foreach (var node in _children)
