@@ -12,7 +12,6 @@ namespace Classification.Model.DecisionTree
     public class DecisionNode
     {
         private List<DecisionNode> _children;
-        private readonly InstanceList.InstanceList _data;
         private readonly string _classLabel;
         private bool _leaf;
         private readonly DecisionCondition _condition;
@@ -48,7 +47,6 @@ namespace Classification.Model.DecisionTree
             int bestAttribute = -1, size;
             double bestSplitValue = 0;
             _condition = condition;
-            _data = data;
             _classLabelsDistribution = new DiscreteDistribution();
             var labels = data.GetClassLabels();
             foreach (var label in labels){
@@ -115,7 +113,7 @@ namespace Classification.Model.DecisionTree
                 {
                     if (data.Get(0).GetAttribute(index) is DiscreteAttribute)
                     {
-                        entropy = EntropyForDiscreteAttribute(index);
+                        entropy = EntropyForDiscreteAttribute(data, index);
                         if (entropy < bestEntropy)
                         {
                             bestEntropy = entropy;
@@ -171,19 +169,19 @@ namespace Classification.Model.DecisionTree
                 _leaf = false;
                 if (data.Get(0).GetAttribute(bestAttribute) is DiscreteIndexedAttribute)
                 {
-                    CreateChildrenForDiscreteIndexed(bestAttribute, (int) bestSplitValue, parameter, isStump);
+                    CreateChildrenForDiscreteIndexed(data, bestAttribute, (int) bestSplitValue, parameter, isStump);
                 }
                 else
                 {
                     if (data.Get(0).GetAttribute(bestAttribute) is DiscreteAttribute)
                     {
-                        CreateChildrenForDiscrete(bestAttribute, parameter, isStump);
+                        CreateChildrenForDiscrete(data, bestAttribute, parameter, isStump);
                     }
                     else
                     {
                         if (data.Get(0).GetAttribute(bestAttribute) is ContinuousAttribute)
                         {
-                            CreateChildrenForContinuous(bestAttribute, bestSplitValue, parameter, isStump);
+                            CreateChildrenForContinuous(data, bestAttribute, bestSplitValue, parameter, isStump);
                         }
                     }
                 }
@@ -225,16 +223,17 @@ namespace Classification.Model.DecisionTree
          * <summary> The entropyForDiscreteAttribute method takes an attributeIndex and creates an List of DiscreteDistribution.
          * Then loops through the distributions and calculates the total entropy.</summary>
          *
+         * <param name="data">Instance list</param>
          * <param name="attributeIndex">Index of the attribute.</param>
          * <returns>Total entropy for the discrete attribute.</returns>
          */
-        private double EntropyForDiscreteAttribute(int attributeIndex)
+        private double EntropyForDiscreteAttribute(InstanceList.InstanceList data, int attributeIndex)
         {
             var sum = 0.0;
-            var distributions = _data.AttributeClassDistribution(attributeIndex);
+            var distributions = data.AttributeClassDistribution(attributeIndex);
             foreach (var distribution in distributions)
             {
-                sum += (distribution.GetSum() / _data.Size()) * distribution.Entropy();
+                sum += (distribution.GetSum() / data.Size()) * distribution.Entropy();
             }
 
             return sum;
@@ -244,26 +243,27 @@ namespace Classification.Model.DecisionTree
          * <summary> The createChildrenForDiscreteIndexed method creates an List of DecisionNodes as children and a partition with respect to
          * indexed attribute.</summary>
          *
+         * <param name="data">Instance list</param>
          * <param name="attributeIndex">Index of the attribute.</param>
          * <param name="attributeValue">Value of the attribute.</param>
          * <param name="parameter">     RandomForestParameter like seed, ensembleSize, attributeSubsetSize.</param>
          * <param name="isStump">       Refers to decision trees with only 1 splitting rule.</param>
          */
-        private void CreateChildrenForDiscreteIndexed(int attributeIndex, int attributeValue,
+        private void CreateChildrenForDiscreteIndexed(InstanceList.InstanceList data, int attributeIndex, int attributeValue,
             RandomForestParameter parameter, bool isStump)
         {
-            var childrenData = _data.DivideWithRespectToIndexedAttribute(attributeIndex, attributeValue);
+            var childrenData = data.DivideWithRespectToIndexedAttribute(attributeIndex, attributeValue);
             _children = new List<DecisionNode>
             {
                 new DecisionNode(childrenData.Get(0),
                     new DecisionCondition(attributeIndex,
                         new DiscreteIndexedAttribute("", attributeValue,
-                            ((DiscreteIndexedAttribute) _data.Get(0).GetAttribute(attributeIndex)).GetMaxIndex())),
+                            ((DiscreteIndexedAttribute) data.Get(0).GetAttribute(attributeIndex)).GetMaxIndex())),
                     parameter, isStump),
                 new DecisionNode(childrenData.Get(1),
                     new DecisionCondition(attributeIndex,
                         new DiscreteIndexedAttribute("", -1,
-                            ((DiscreteIndexedAttribute) _data.Get(0).GetAttribute(attributeIndex)).GetMaxIndex())),
+                            ((DiscreteIndexedAttribute) data.Get(0).GetAttribute(attributeIndex)).GetMaxIndex())),
                     parameter, isStump)
             };
         }
@@ -272,14 +272,15 @@ namespace Classification.Model.DecisionTree
          * <summary> The createChildrenForDiscrete method creates an List of values, a partition with respect to attributes and an List
          * of DecisionNodes as children.</summary>
          *
+         * <param name="data">Instance list</param>
          * <param name="attributeIndex">Index of the attribute.</param>
          * <param name="parameter">     RandomForestParameter like seed, ensembleSize, attributeSubsetSize.</param>
          * <param name="isStump">       Refers to decision trees with only 1 splitting rule.</param>
          */
-        private void CreateChildrenForDiscrete(int attributeIndex, RandomForestParameter parameter, bool isStump)
+        private void CreateChildrenForDiscrete(InstanceList.InstanceList data, int attributeIndex, RandomForestParameter parameter, bool isStump)
         {
-            var valueList = _data.GetAttributeValueList(attributeIndex);
-            var childrenData = _data.DivideWithRespectToAttribute(attributeIndex);
+            var valueList = data.GetAttributeValueList(attributeIndex);
+            var childrenData = data.DivideWithRespectToAttribute(attributeIndex);
             _children = new List<DecisionNode>();
             for (var i = 0; i < valueList.Count; i++)
             {
@@ -293,15 +294,16 @@ namespace Classification.Model.DecisionTree
          * <summary> The createChildrenForContinuous method creates an List of DecisionNodes as children and a partition with respect to
          * continuous attribute and the given split value.</summary>
          *
+         * <param name="data">Instance list</param>
          * <param name="attributeIndex">Index of the attribute.</param>
          * <param name="parameter">     RandomForestParameter like seed, ensembleSize, attributeSubsetSize.</param>
          * <param name="isStump">       Refers to decision trees with only 1 splitting rule.</param>
          * <param name="splitValue">    Split value is used for partitioning.</param>
          */
-        private void CreateChildrenForContinuous(int attributeIndex, double splitValue, RandomForestParameter parameter,
+        private void CreateChildrenForContinuous(InstanceList.InstanceList data, int attributeIndex, double splitValue, RandomForestParameter parameter,
             bool isStump)
         {
-            var childrenData = _data.DivideWithRespectToAttribute(attributeIndex, splitValue);
+            var childrenData = data.DivideWithRespectToAttribute(attributeIndex, splitValue);
             _children = new List<DecisionNode>
             {
                 new DecisionNode(childrenData.Get(0),
@@ -349,7 +351,7 @@ namespace Classification.Model.DecisionTree
             if (instance is CompositeInstance compositeInstance)
             {
                 var possibleClassLabels = compositeInstance.GetPossibleClassLabels();
-                var distribution = _data.ClassDistribution();
+                var distribution = _classLabelsDistribution;
                 var predictedClass = distribution.GetMaxItem(possibleClassLabels);
                 if (_leaf)
                 {
@@ -404,7 +406,7 @@ namespace Classification.Model.DecisionTree
                 }
             }
 
-            return _data.ClassDistribution().GetProbabilityDistribution();
+            return _classLabelsDistribution.GetProbabilityDistribution();
         }
     }
 }
