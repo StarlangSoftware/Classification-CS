@@ -28,10 +28,10 @@ namespace Classification.Experiment
         public override ExperimentPerformance Execute(Experiment experiment)
         {
             var result = new ExperimentPerformance();
+            var instanceList = experiment.GetDataSet().GetInstanceList();
+            var partition = instanceList.Partition(0.25, new Random(experiment.GetParameter().GetSeed()));
             for (var j = 0; j < _m; j++)
             {
-                var instanceList = experiment.GetDataSet().GetInstanceList();
-                var partition = instanceList.Partition(0.25, new Random(experiment.GetParameter().GetSeed()));
                 var crossValidation =
                     new StratifiedKFoldCrossValidation<Instance.Instance>(partition.Get(1).DivideIntoClasses().GetLists(), K,
                         experiment.GetParameter().GetSeed());
