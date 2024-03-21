@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using Classification.Model;
 using Classification.Model.DecisionTree;
 using Classification.Parameter;
-using Sampling;
 
 namespace Classification.Classifier
 {

@@ -5,7 +5,7 @@ namespace Classification.Experiment
 {
     public class MxKFoldRun : KFoldRun
     {
-        protected readonly int M;
+        protected readonly int m;
 
         /**
          * <summary> Constructor for MxKFoldRun class. Basically sets K parameter of the K-fold cross-validation and M for the number of times.</summary>
@@ -15,7 +15,7 @@ namespace Classification.Experiment
          */
         public MxKFoldRun(int m, int k) : base(k)
         {
-            this.M = m;
+            this.m = m;
         }
 
         /**
@@ -27,10 +27,10 @@ namespace Classification.Experiment
         public override ExperimentPerformance Execute(Experiment experiment)
         {
             var result = new ExperimentPerformance();
-            for (var j = 0; j < M; j++)
+            for (var j = 0; j < m; j++)
             {
                 var crossValidation =
-                    new KFoldCrossValidation<Instance.Instance>(experiment.GetDataSet().GetInstances(), K,
+                    new KFoldCrossValidation<Instance.Instance>(experiment.GetDataSet().GetInstances(), k,
                         experiment.GetParameter().GetSeed());
                 RunExperiment(experiment.GetClassifier(), experiment.GetParameter(), result, crossValidation);
             }

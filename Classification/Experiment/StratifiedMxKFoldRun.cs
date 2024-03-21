@@ -24,11 +24,11 @@ namespace Classification.Experiment
         public override ExperimentPerformance Execute(Experiment experiment)
         {
             var result = new ExperimentPerformance();
-            for (var j = 0; j < M; j++)
+            for (var j = 0; j < m; j++)
             {
                 var crossValidation =
                     new StratifiedKFoldCrossValidation<Instance.Instance>(experiment.GetDataSet().GetClassInstances(),
-                        K,
+                        k,
                         experiment.GetParameter().GetSeed());
                 RunExperiment(experiment.GetClassifier(), experiment.GetParameter(), result, crossValidation);
             }

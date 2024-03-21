@@ -23,7 +23,7 @@ namespace Classification.Experiment
         {
             var result = new ExperimentPerformance();
             var crossValidation =
-                new StratifiedKFoldCrossValidation<Instance.Instance>(experiment.GetDataSet().GetClassInstances(), K,
+                new StratifiedKFoldCrossValidation<Instance.Instance>(experiment.GetDataSet().GetClassInstances(), k,
                     experiment.GetParameter().GetSeed());
             RunExperiment(experiment.GetClassifier(), experiment.GetParameter(), result, crossValidation);
             return result;

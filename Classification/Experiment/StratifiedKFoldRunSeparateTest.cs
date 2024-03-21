@@ -28,7 +28,7 @@ namespace Classification.Experiment
             var partition = instanceList.Partition(0.25, new Random(experiment.GetParameter().GetSeed()));
             var crossValidation =
                 new StratifiedKFoldCrossValidation<Instance.Instance>(partition.Get(1).DivideIntoClasses().GetLists(),
-                    K, experiment.GetParameter().GetSeed());
+                    k, experiment.GetParameter().GetSeed());
             RunExperiment(experiment.GetClassifier(), experiment.GetParameter(), result, crossValidation,
                 partition.Get(0));
             return result;

@@ -5,9 +5,6 @@ namespace Classification.DistanceMetric
 {
     public class EuclidianDistance : DistanceMetric
     {
-        public EuclidianDistance()
-        {
-        }
 
         /**
          * <summary> Calculates Euclidian distance between two instances. For continuous features: \sum_{i=1}^d (x_i^(1) - x_i^(2))^2,

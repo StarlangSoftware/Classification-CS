@@ -35,7 +35,7 @@ namespace Classification.DataSet
         /**
          * <summary> Constructor for generating a new {@link DataSet} from given {@link File}.</summary>
          *
-         * <param name="file">{@link File} to generate {@link DataSet} from.</param>
+         * <param name="fileName">{@link File} to generate {@link DataSet} from.</param>
          */
         public DataSet(string fileName)
         {

@@ -9,7 +9,7 @@ namespace Classification.Experiment
         /**
          * <summary> Constructor for StratifiedSingleRunWithK class. Basically sets K parameter of the K-fold cross-validation.</summary>
          *
-         * <param name="K">K of the K-fold cross-validation.</param>
+         * <param name="k">K of the K-fold cross-validation.</param>
          */
         public StratifiedSingleRunWithK(int k)
         {

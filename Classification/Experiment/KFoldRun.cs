@@ -5,7 +5,7 @@ namespace Classification.Experiment
 {
     public class KFoldRun : MultipleRun
     {
-        protected readonly int K;
+        protected readonly int k;
 
         /**
          * <summary> Constructor for KFoldRun class. Basically sets K parameter of the K-fold cross-validation.</summary>
@@ -14,13 +14,13 @@ namespace Classification.Experiment
          */
         public KFoldRun(int k)
         {
-            this.K = k;
+            this.k = k;
         }
 
         protected void RunExperiment(Classifier.Classifier classifier, Parameter.Parameter parameter,
             ExperimentPerformance experimentPerformance, CrossValidation<Instance.Instance> crossValidation)
         {
-            for (var i = 0; i < K; i++)
+            for (var i = 0; i < k; i++)
             {
                 var trainSet = new InstanceList.InstanceList(crossValidation.GetTrainFold(i));
                 var testSet = new InstanceList.InstanceList(crossValidation.GetTestFold(i));
@@ -40,7 +40,7 @@ namespace Classification.Experiment
             var result = new ExperimentPerformance();
 
             var crossValidation = new KFoldCrossValidation<Instance.Instance>(experiment.GetDataSet().GetInstances(),
-                K, experiment.GetParameter().GetSeed());
+                k, experiment.GetParameter().GetSeed());
 
             RunExperiment(experiment.GetClassifier(), experiment.GetParameter(), result, crossValidation);
             return result;

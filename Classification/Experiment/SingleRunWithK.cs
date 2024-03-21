@@ -16,7 +16,7 @@ namespace Classification.Experiment
             this._k = k;
         }
 
-        protected Performance.Performance runExperiment(Classifier.Classifier classifier, Parameter.Parameter parameter,
+        protected Performance.Performance RunExperiment(Classifier.Classifier classifier, Parameter.Parameter parameter,
             CrossValidation<Instance.Instance> crossValidation)
         {
             var trainSet = new InstanceList.InstanceList(crossValidation.GetTrainFold(0));
@@ -36,7 +36,7 @@ namespace Classification.Experiment
             var crossValidation =
                 new KFoldCrossValidation<Instance.Instance>(experiment.GetDataSet().GetInstances(), _k,
                     experiment.GetParameter().GetSeed());
-            return runExperiment(experiment.GetClassifier(), experiment.GetParameter(), crossValidation);
+            return RunExperiment(experiment.GetClassifier(), experiment.GetParameter(), crossValidation);
         }
     }
 }

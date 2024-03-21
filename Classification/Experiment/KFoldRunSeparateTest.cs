@@ -19,7 +19,7 @@ namespace Classification.Experiment
             ExperimentPerformance experimentPerformance, CrossValidation<Instance.Instance> crossValidation,
             InstanceList.InstanceList testSet)
         {
-            for (var i = 0; i < K; i++)
+            for (var i = 0; i < k; i++)
             {
                 var trainSet = new InstanceList.InstanceList(crossValidation.GetTrainFold(i));
                 classifier.Train(trainSet, parameter);
@@ -40,7 +40,7 @@ namespace Classification.Experiment
             var partition = instanceList.Partition(0.25, new Random(experiment.GetParameter().GetSeed()));
             var crossValidation = new KFoldCrossValidation<Instance.Instance>(
                 partition.Get(1).GetInstances(),
-                K, experiment.GetParameter().GetSeed());
+                k, experiment.GetParameter().GetSeed());
             RunExperiment(experiment.GetClassifier(), experiment.GetParameter(), result, crossValidation,
                 partition.Get(0));
             return result;
