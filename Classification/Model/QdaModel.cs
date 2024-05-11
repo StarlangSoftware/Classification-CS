@@ -23,6 +23,10 @@ namespace Classification.Model
             _W = W;
         }
 
+        /// <summary>
+        /// Loads a quadratic discriminant analysis model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
         public QdaModel(string fileName)
         {
             var input = new StreamReader(fileName);

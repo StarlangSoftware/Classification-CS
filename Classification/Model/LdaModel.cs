@@ -29,6 +29,12 @@ namespace Classification.Model
         {
             
         }
+        
+        /// <summary>
+        /// Loads w0 and w hash maps from an input file. The number of items in the hash map is given by the parameter size.
+        /// </summary>
+        /// <param name="input">Input file</param>
+        /// <param name="size">Number of items in the hash map read.</param>
         protected void LoadWandW0(StreamReader input, int size)
         {
             w0 = new Dictionary<string, double>();
@@ -42,6 +48,10 @@ namespace Classification.Model
             w = LoadVectors(input, size);
         }
 
+        /// <summary>
+        /// Loads a Linear Discriminant Analysis model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
         public LdaModel(string fileName)
         {
             var input = new StreamReader(fileName);

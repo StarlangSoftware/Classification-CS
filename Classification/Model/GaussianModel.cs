@@ -18,6 +18,11 @@ namespace Classification.Model
          */
         protected abstract double CalculateMetric(Instance.Instance instance, string Ci);
 
+        /// <summary>
+        /// Loads the prior probability distribution from an input model file.
+        /// </summary>
+        /// <param name="input">Input model file.</param>
+        /// <returns>Prior probability distribution.</returns>
         protected int LoadPriorDistribution(StreamReader input)
         {
             var size = int.Parse(input.ReadLine());
@@ -35,6 +40,12 @@ namespace Classification.Model
             return size;
         }
 
+        /// <summary>
+        /// Loads hash map of vectors from input model file.
+        /// </summary>
+        /// <param name="input">Input model file.</param>
+        /// <param name="size">Number of vectors to be read from input model file.</param>
+        /// <returns>Hash map of vectors.</returns>
         protected Dictionary<string, Vector> LoadVectors(StreamReader input, int size)
         {
             var map = new Dictionary<string, Vector>();
@@ -104,6 +115,11 @@ namespace Classification.Model
             return predictedClass;
         }
 
+        /// <summary>
+        /// Calculates the posterior probability distribution for the given instance according to Gaussian model.
+        /// </summary>
+        /// <param name="instance">Instance for which posterior probability distribution is calculated.</param>
+        /// <returns>Posterior probability distribution for the given instance.</returns>
         public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
         {
             return null;

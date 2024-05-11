@@ -19,6 +19,10 @@ namespace Classification.Model
             _forest = forest;
         }
 
+        /// <summary>
+        /// Loads a tree ensemble model such as Random Forest model or Bagging model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
         public TreeEnsembleModel(string fileName)
         {
             var input = new StreamReader(fileName);
@@ -51,6 +55,11 @@ namespace Classification.Model
             return distribution.GetMaxItem();
         }
 
+        /// <summary>
+        /// Calculates the posterior probability distribution for the given instance according to ensemble tree model.
+        /// </summary>
+        /// <param name="instance">Instance for which posterior probability distribution is calculated.</param>
+        /// <returns>Posterior probability distribution for the given instance.</returns>
         public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
         {
             var distribution = new DiscreteDistribution();

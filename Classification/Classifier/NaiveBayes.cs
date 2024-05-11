@@ -65,6 +65,10 @@ namespace Classification.Classifier
             }
         }
 
+        /// <summary>
+        /// Loads the naive Bayes model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the naive Bayes model.</param>
         public override void LoadModel(string fileName)
         {
             model = new NaiveBayesModel(fileName);

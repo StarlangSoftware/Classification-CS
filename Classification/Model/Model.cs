@@ -17,6 +17,11 @@ namespace Classification.Model
 
         public abstract Dictionary<string, double> PredictProbability(Instance.Instance instance);
 
+        /// <summary>
+        /// Loads an instance list from an input model file.
+        /// </summary>
+        /// <param name="input">Input model file.</param>
+        /// <returns>Instance list read from an input model file.</returns>
         protected InstanceList.InstanceList LoadInstanceList(StreamReader input)
         {
             var types = input.ReadLine().Split(" ");
@@ -30,6 +35,11 @@ namespace Classification.Model
             return instanceList;
         }
 
+        /// <summary>
+        /// Loads a discrete distribution from an input model file
+        /// </summary>
+        /// <param name="input">Input model file.</param>
+        /// <returns>Discrete distribution read from an input model file.</returns>
         public static DiscreteDistribution LoadDiscreteDistribution(StreamReader input)
         {
             var distribution = new DiscreteDistribution();
@@ -38,8 +48,8 @@ namespace Classification.Model
             {
                 var line = input.ReadLine();
                 var items = line.Split(" ");
-                int count = int.Parse(items[1]);
-                for (int j = 0; j < count; j++)
+                var count = int.Parse(items[1]);
+                for (var j = 0; j < count; j++)
                 {
                     distribution.AddItem(items[0]);
                 }
@@ -48,6 +58,13 @@ namespace Classification.Model
             return distribution;
         }
 
+        /// <summary>
+        /// Loads a single instance from a single line.
+        /// </summary>
+        /// <param name="line">Line containing the instance.</param>
+        /// <param name="attributeTypes">Type of the attributes of the instance. If th attribute is discrete, it is
+        /// "DISCRETE", otherwise it is "CONTINUOUS".</param>
+        /// <returns></returns>
         protected Instance.Instance LoadInstance(string line, string[] attributeTypes)
         {
             var items = line.Split(",");
@@ -68,6 +85,11 @@ namespace Classification.Model
             return instance;
         }
 
+        /// <summary>
+        /// Loads a matrix from an input model file.
+        /// </summary>
+        /// <param name="input">Input model file.</param>
+        /// <returns>Matrix read from the input model file.</returns>
         protected Matrix LoadMatrix(StreamReader input)
         {
             var items = input.ReadLine().Split(" ");

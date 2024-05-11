@@ -19,6 +19,10 @@ namespace Classification.Model
             _distribution = trainSet.ClassDistribution();
         }
 
+        /// <summary>
+        /// Loads a dummy model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
         public DummyModel(string fileName)
         {
             var input = new StreamReader(fileName);
@@ -43,6 +47,11 @@ namespace Classification.Model
             return _distribution.GetMaxItem();
         }
 
+        /// <summary>
+        /// Calculates the posterior probability distribution for the given instance according to dummy model.
+        /// </summary>
+        /// <param name="instance">Instance for which posterior probability distribution is calculated.</param>
+        /// <returns>Posterior probability distribution for the given instance.</returns>
         public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
         {
             return _distribution.GetProbabilityDistribution();

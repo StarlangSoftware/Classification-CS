@@ -23,6 +23,10 @@ namespace Classification.Model
             random = new Random(seed);
         }
 
+        /// <summary>
+        /// Loads a random classifier model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
         public RandomModel(string fileName)
         {
             var input = new StreamReader(fileName);
@@ -57,6 +61,11 @@ namespace Classification.Model
             }
         }
 
+        /// <summary>
+        /// Calculates the posterior probability distribution for the given instance according to random model.
+        /// </summary>
+        /// <param name="instance">Instance for which posterior probability distribution is calculated.</param>
+        /// <returns>Posterior probability distribution for the given instance.</returns>
         public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
         {
             var result = new Dictionary<string, double>();

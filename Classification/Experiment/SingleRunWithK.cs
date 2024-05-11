@@ -16,6 +16,14 @@ namespace Classification.Experiment
             this._k = k;
         }
 
+        /// <summary>
+        /// Runs first fold of a K fold cross-validated experiment for the given classifier with the given parameters.
+        /// The experiment result will be returned.
+        /// </summary>
+        /// <param name="classifier">Classifier for the experiment</param>
+        /// <param name="parameter">Hyperparameters of the classifier of the experiment</param>
+        /// <param name="crossValidation">K-fold crossvalidated dataset.</param>
+        /// <returns>The experiment result of the first fold of the K-fold cross-validated experiment.</returns>
         protected Performance.Performance RunExperiment(Classifier.Classifier classifier, Parameter.Parameter parameter,
             CrossValidation<Instance.Instance> crossValidation)
         {

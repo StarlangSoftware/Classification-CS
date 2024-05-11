@@ -27,6 +27,9 @@ namespace Classification.Model
             d = trainSet.Get(0).ContinuousAttributeSize();
         }
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public NeuralNetworkModel()
         {
             
@@ -192,6 +195,11 @@ namespace Classification.Model
             return classLabels[y.MaxIndex()];
         }
 
+        /// <summary>
+        /// Calculates the posterior probability distribution for the given instance according to neural network model.
+        /// </summary>
+        /// <param name="instance">Instance for which posterior probability distribution is calculated.</param>
+        /// <returns>Posterior probability distribution for the given instance.</returns>
         public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
         {
             CreateInputVector(instance);
@@ -206,6 +214,10 @@ namespace Classification.Model
             return result;
         }
 
+        /// <summary>
+        /// Loads the class labels from input model file.
+        /// </summary>
+        /// <param name="input">Input model file.</param>
         protected void LoadClassLabels(StreamReader input)
         {
             var items = input.ReadLine().Split(" ");
@@ -218,6 +230,11 @@ namespace Classification.Model
             }
         }
 
+        /// <summary>
+        /// Loads the activation function from an input model file.
+        /// </summary>
+        /// <param name="input">Input model file.</param>
+        /// <returns>Activation function read.</returns>
         protected ActivationFunction LoadActivationFunction(StreamReader input)
         {
             switch (input.ReadLine())

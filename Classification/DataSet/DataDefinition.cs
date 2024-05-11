@@ -39,10 +39,21 @@ namespace Classification.DataSet
             _attributeValueList = attributeValueList;
         }
 
+        /// <summary>
+        /// Returns number of distinct values for a given discrete attribute with index attributeIndex.
+        /// </summary>
+        /// <param name="attributeIndex">Index of the discrete attribute.</param>
+        /// <returns>Number of distinct values for a given discrete attribute</returns>
         public int NumberOfValues(int attributeIndex){
             return _attributeValueList[attributeIndex].Length;
         }
 
+        /// <summary>
+        /// Returns the index of the given value in the values list of the attributeIndex'th discrete attribute.
+        /// </summary>
+        /// <param name="attributeIndex">Index of the discrete attribute.</param>
+        /// <param name="value">Value of the discrete attribute</param>
+        /// <returns>Index of the given value in the values list of the discrete attribute.</returns>
         public int FeatureValueIndex(int attributeIndex, string value){
             for (var i = 0; i < _attributeValueList[attributeIndex].Length; i++){
                 if (_attributeValueList[attributeIndex][i].Equals(value)){

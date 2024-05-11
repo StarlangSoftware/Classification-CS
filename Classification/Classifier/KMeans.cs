@@ -24,6 +24,10 @@ namespace Classification.Classifier
             model = new KMeansModel(priorDistribution, classMeans, ((KMeansParameter) parameters).GetDistanceMetric());
         }
 
+        /// <summary>
+        /// Loads the K-means model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the K-means model.</param>
         public override void LoadModel(string fileName)
         {
             model = new KMeansModel(fileName);

@@ -16,6 +16,10 @@ namespace Classification.Classifier
             model = new RandomModel(new List<String>(trainSet.ClassDistribution().Keys), parameters.GetSeed());
         }
 
+        /// <summary>
+        /// Loads the random classifier model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the random classifier model.</param>
         public override void LoadModel(string fileName)
         {
             model = new RandomModel(fileName);

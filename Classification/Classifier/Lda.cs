@@ -46,6 +46,10 @@ namespace Classification.Classifier
             model = new LdaModel(priorDistribution, w, w0);
         }
 
+        /// <summary>
+        /// Loads the Lda model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the Lda model.</param>
         public override void LoadModel(string fileName)
         {
             model = new LdaModel(fileName);

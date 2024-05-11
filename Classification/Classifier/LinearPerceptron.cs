@@ -22,6 +22,10 @@ namespace Classification.Classifier
                 (LinearPerceptronParameter) parameters);
         }
 
+        /// <summary>
+        /// Loads the linear perceptron model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the linear perceptron model.</param>
         public override void LoadModel(string fileName)
         {
             model = new LinearPerceptronModel(fileName);

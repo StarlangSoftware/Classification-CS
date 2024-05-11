@@ -19,6 +19,10 @@ namespace Classification.Classifier
             model = new DeepNetworkModel(partition.Get(1), partition.Get(0), (DeepNetworkParameter) parameters);
         }
 
+        /// <summary>
+        /// Loads the deep network model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the deep network model.</param>
         public override void LoadModel(string fileName)
         {
             model = new DeepNetworkModel(fileName);

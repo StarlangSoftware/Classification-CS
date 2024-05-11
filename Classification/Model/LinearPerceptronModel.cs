@@ -19,10 +19,18 @@ namespace Classification.Model
         {
         }
 
+        /// <summary>
+        /// Default constructor
+        /// </summary>
         public LinearPerceptronModel()
         {
             
         }
+        
+        /// <summary>
+        /// Loads a linear perceptron model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
         public LinearPerceptronModel(string fileName)
         {
             var input = new StreamReader(fileName);

@@ -165,6 +165,10 @@ namespace Classification.Model
             }
         }
 
+        /// <summary>
+        /// Loads a deep network model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
         public DeepNetworkModel(string fileName)
         {
             var input = new StreamReader(fileName);
@@ -177,6 +181,7 @@ namespace Classification.Model
             _activationFunction = LoadActivationFunction(input);
             input.Close();
         }
+        
         /**
          * <summary> The calculateOutput method loops size of the weights times and calculate one hidden layer at a time and adds bias term.
          * At the end it updates the output y value.</summary>

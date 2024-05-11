@@ -24,6 +24,10 @@ namespace Classification.Classifier
                 parameters);
         }
 
+        /// <summary>
+        /// Loads the multi-layer perceptron model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the multi-layer perceptron model.</param>
         public override void LoadModel(string fileName)
         {
             model = new MultiLayerPerceptronModel(fileName);

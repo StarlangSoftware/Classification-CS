@@ -40,6 +40,10 @@ namespace Classification.Model
             _classAttributeDistributions = classAttributeDistributions;
         }
 
+        /// <summary>
+        /// Loads a naive Bayes model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
         public NaiveBayesModel(string fileName)
         {
             var input = new StreamReader(fileName);

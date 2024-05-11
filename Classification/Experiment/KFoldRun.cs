@@ -17,6 +17,14 @@ namespace Classification.Experiment
             this.k = k;
         }
 
+        /// <summary>
+        /// Runs a K fold cross-validated experiment for the given classifier with the given parameters. The experiment
+        /// results will be added to the experimentPerformance.
+        /// </summary>
+        /// <param name="classifier">Classifier for the experiment</param>
+        /// <param name="parameter">Hyperparameters of the classifier of the experiment</param>
+        /// <param name="experimentPerformance">Storage to add experiment results</param>
+        /// <param name="crossValidation">K-fold crossvalidated dataset.</param>
         protected void RunExperiment(Classifier.Classifier classifier, Parameter.Parameter parameter,
             ExperimentPerformance experimentPerformance, CrossValidation<Instance.Instance> crossValidation)
         {

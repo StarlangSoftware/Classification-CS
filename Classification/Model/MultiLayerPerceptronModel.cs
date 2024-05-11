@@ -22,6 +22,10 @@ namespace Classification.Model
             _V = AllocateLayerWeights(K, H + 1, random);
         }
 
+        /// <summary>
+        /// Loads a multi-layer perceptron model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
         public MultiLayerPerceptronModel(string fileName)
         {
             var input = new StreamReader(fileName);

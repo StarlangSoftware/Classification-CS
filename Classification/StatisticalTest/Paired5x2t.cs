@@ -5,6 +5,12 @@ namespace Classification.StatisticalTest
 {
     public class Paired5x2t : PairedTest
     {
+        /// <summary>
+        /// Calculates the test statistic of the 5x2 t test.
+        /// </summary>
+        /// <param name="classifier1">Performance (error rate or accuracy) results of the first classifier.</param>
+        /// <param name="classifier2">Performance (error rate or accuracy) results of the second classifier.</param>
+        /// <returns>Given the performances of two classifiers, the test statistic of the 5x2 t test.</returns>
         private double TestStatistic(ExperimentPerformance classifier1, ExperimentPerformance classifier2)
         {
             var difference = new double[classifier1.NumberOfExperiments()];
@@ -27,6 +33,12 @@ namespace Classification.StatisticalTest
             return difference[0] / denominator;
         }
 
+        /// <summary>
+        /// Compares two classification algorithms based on their performances (accuracy or error rate) using 5x2 t test.
+        /// </summary>
+        /// <param name="classifier1">Performance (error rate or accuracy) results of the first classifier.</param>
+        /// <param name="classifier2">Performance (error rate or accuracy) results of the second classifier.</param>
+        /// <returns>Statistical test result of the comparison.</returns>
         public override StatisticalTestResult Compare(ExperimentPerformance classifier1,
             ExperimentPerformance classifier2)
         {

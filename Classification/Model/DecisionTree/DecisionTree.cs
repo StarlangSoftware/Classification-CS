@@ -18,6 +18,10 @@ namespace Classification.Model.DecisionTree
             _root = root;
         }
 
+        /// <summary>
+        /// Loads a decision tree model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
         public DecisionTree(string fileName)
         {
             var input = new StreamReader(fileName);
@@ -41,6 +45,11 @@ namespace Classification.Model.DecisionTree
             return predictedClass;
         }
 
+        /// <summary>
+        /// Calculates the posterior probability distribution for the given instance according to Decision tree model.
+        /// </summary>
+        /// <param name="instance">Instance for which posterior probability distribution is calculated.</param>
+        /// <returns>Posterior probability distribution for the given instance.</returns>
         public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
         {
             return _root.PredictProbabilityDistribution(instance);

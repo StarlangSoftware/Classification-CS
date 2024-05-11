@@ -24,6 +24,10 @@ namespace Classification.Model
             _distanceMetric = distanceMetric;
         }
 
+        /// <summary>
+        /// Loads a K-means model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
         public KMeansModel(string fileName)
         {
             _distanceMetric = new EuclidianDistance();

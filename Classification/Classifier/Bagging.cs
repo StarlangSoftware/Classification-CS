@@ -31,6 +31,10 @@ namespace Classification.Classifier
             model = new TreeEnsembleModel(forest);
         }
 
+        /// <summary>
+        /// Loads the Bagging ensemble model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the decision tree model.</param>
         public override void LoadModel(string fileName)
         {
             model = new TreeEnsembleModel(fileName);

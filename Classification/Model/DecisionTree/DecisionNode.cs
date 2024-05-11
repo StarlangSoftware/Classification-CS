@@ -188,6 +188,10 @@ namespace Classification.Model.DecisionTree
             }
         }
 
+        /// <summary>
+        /// Reads the decision node model (as one line) from model file.
+        /// </summary>
+        /// <param name="input">Model file</param>
         public DecisionNode(StreamReader input)
         {
             var line = input.ReadLine();
@@ -391,6 +395,13 @@ namespace Classification.Model.DecisionTree
             return _classLabel;
         }
         
+        /// <summary>
+        /// Recursive method that returns the posterior probability distribution of a given instance. If the node is a leaf
+        /// node, it returns the class label distribution, otherwise it checks in which direction (child node) this instance
+        /// is forwarded.
+        /// </summary>
+        /// <param name="instance">Instance for which the posterior probability distribution is calculated.</param>
+        /// <returns>Posterior probability distribution for this instance.</returns>
         public Dictionary<string, double> PredictProbabilityDistribution(Instance.Instance instance)
         {
             if (_leaf)

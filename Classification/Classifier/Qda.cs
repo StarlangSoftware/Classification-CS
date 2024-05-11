@@ -42,6 +42,10 @@ namespace Classification.Classifier
             model = new QdaModel(priorDistribution, W, w, w0);
         }
 
+        /// <summary>
+        /// Loads the Qda model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the Qda model.</param>
         public override void LoadModel(string fileName)
         {
             model = new QdaModel(fileName);

@@ -18,6 +18,10 @@ namespace Classification.Classifier
                 ((KnnParameter) parameters).GetDistanceMetric());
         }
 
+        /// <summary>
+        /// Loads the K-nearest neighbor model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the K-nearest neighbor model.</param>
         public override void LoadModel(string fileName)
         {
             model = new KnnModel(fileName);

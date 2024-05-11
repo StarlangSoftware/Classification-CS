@@ -25,6 +25,10 @@ namespace Classification.Model
             _distanceMetric = distanceMetric;
         }
 
+        /// <summary>
+        /// Loads a K-nearest neighbor model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
         public KnnModel(string fileName)
         {
             _distanceMetric = new EuclidianDistance();
@@ -53,6 +57,11 @@ namespace Classification.Model
             return predictedClass;
         }
 
+        /// <summary>
+        /// Calculates the posterior probability distribution for the given instance according to K-means model.
+        /// </summary>
+        /// <param name="instance">Instance for which posterior probability distribution is calculated.</param>
+        /// <returns>Posterior probability distribution for the given instance.</returns>
         public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
         {
             var nearestNeighbors = NearestNeighbors(instance);

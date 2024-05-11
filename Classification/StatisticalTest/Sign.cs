@@ -4,6 +4,11 @@ namespace Classification.StatisticalTest
 {
     public class Sign : PairedTest
     {
+        /// <summary>
+        /// Calculates n!.
+        /// </summary>
+        /// <param name="n">n is n!</param>
+        /// <returns>n!.</returns>
         private int Factorial(int n)
         {
             int i, result = 1;
@@ -12,6 +17,12 @@ namespace Classification.StatisticalTest
             return result;
         }
 
+        /// <summary>
+        /// Calculates m of n that is C(n, m)
+        /// </summary>
+        /// <param name="m">m in C(m, n)</param>
+        /// <param name="n">n in C(m, n)</param>
+        /// <returns>C(m, n)</returns>
         private int Binomial(int m, int n)
         {
             if (n == 0 || m == n)
@@ -19,6 +30,12 @@ namespace Classification.StatisticalTest
             return Factorial(m) / (Factorial(n) * Factorial(m - n));
         }
 
+        /// <summary>
+        /// Compares two classification algorithms based on their performances (accuracy or error rate) using sign test.
+        /// </summary>
+        /// <param name="classifier1">Performance (error rate or accuracy) results of the first classifier.</param>
+        /// <param name="classifier2">Performance (error rate or accuracy) results of the second classifier.</param>
+        /// <returns>Statistical test result of the comparison.</returns>
         public override StatisticalTestResult Compare(ExperimentPerformance classifier1,
             ExperimentPerformance classifier2)
         {

@@ -28,6 +28,10 @@ namespace Classification.Classifier
             model = new TreeEnsembleModel(forest);
         }
 
+        /// <summary>
+        /// Loads the random forest model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the random forest model.</param>
         public override void LoadModel(string fileName)
         {
             model = new TreeEnsembleModel(fileName);
