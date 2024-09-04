@@ -35,7 +35,7 @@ namespace Classification.Experiment
                 var crossValidation =
                     new KFoldCrossValidation<Instance.Instance>(partition.Get(1).GetInstances(), k,
                         experiment.GetParameter().GetSeed());
-                RunExperiment(experiment.GetClassifier(), experiment.GetParameter(), result, crossValidation,
+                RunExperiment(experiment.GetModel(), experiment.GetParameter(), result, crossValidation,
                     partition.Get(0));
             }
 

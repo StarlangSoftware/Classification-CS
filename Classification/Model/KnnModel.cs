@@ -2,27 +2,31 @@ using System.Collections.Generic;
 using System.IO;
 using Classification.DistanceMetric;
 using Classification.Instance;
+using Classification.Parameter;
 
 namespace Classification.Model
 {
     public class KnnModel : Model
     {
-        private readonly InstanceList.InstanceList _data;
-        private readonly int _k;
-        private readonly DistanceMetric.DistanceMetric _distanceMetric;
+        private InstanceList.InstanceList _data;
+        private int _k;
+        private DistanceMetric.DistanceMetric _distanceMetric;
 
-        /**
-         * <summary> Constructor that sets the data {@link InstanceList}, k value and the {@link DistanceMetric}.</summary>
-         *
-         * <param name="data">          {@link InstanceList} input.</param>
-         * <param name="k">             K value.</param>
-         * <param name="distanceMetric">{@link DistanceMetric} input.</param>
-         */
-        public KnnModel(InstanceList.InstanceList data, int k, DistanceMetric.DistanceMetric distanceMetric)
+        public KnnModel()
         {
-            _data = data;
-            _k = k;
-            _distanceMetric = distanceMetric;
+        }
+
+        /// <summary>
+        /// Loads a K-nearest neighbor model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
+        private void Load(string fileName)
+        {
+            _distanceMetric = new EuclidianDistance();
+            var input = new StreamReader(fileName);
+            _k = int.Parse(input.ReadLine());
+            _data = LoadInstanceList(input);
+            input.Close();
         }
 
         /// <summary>
@@ -31,11 +35,7 @@ namespace Classification.Model
         /// <param name="fileName">Model file name.</param>
         public KnnModel(string fileName)
         {
-            _distanceMetric = new EuclidianDistance();
-            var input = new StreamReader(fileName);
-            _k = int.Parse(input.ReadLine());
-            _data = LoadInstanceList(input);
-            input.Close();
+            Load(fileName);
         }
 
         /**
@@ -49,11 +49,15 @@ namespace Classification.Model
         {
             var nearestNeighbors = NearestNeighbors(instance);
             string predictedClass;
-            if (instance is CompositeInstance compositeInstance && nearestNeighbors.Size() == 0) {
+            if (instance is CompositeInstance compositeInstance && nearestNeighbors.Size() == 0)
+            {
                 predictedClass = compositeInstance.GetPossibleClassLabels()[0];
-            } else {
-                predictedClass = Classifier.Classifier.GetMaximum(nearestNeighbors.GetClassLabels());
             }
+            else
+            {
+                predictedClass = GetMaximum(nearestNeighbors.GetClassLabels());
+            }
+
             return predictedClass;
         }
 
@@ -82,13 +86,16 @@ namespace Classification.Model
             var result = new InstanceList.InstanceList();
             var instances = new List<KnnInstance>();
             List<string> possibleClassLabels = null;
-            if (instance is CompositeInstance compositeInstance) {
+            if (instance is CompositeInstance compositeInstance)
+            {
                 possibleClassLabels = compositeInstance.GetPossibleClassLabels();
             }
+
             for (var i = 0; i < _data.Size(); i++)
             {
                 if (!(instance is CompositeInstance) || possibleClassLabels.Contains(
-                    _data.Get(i).GetClassLabel())) {
+                        _data.Get(i).GetClassLabel()))
+                {
                     instances.Add(new KnnInstance(_data.Get(i), _distanceMetric.Distance(_data.Get(i), instance)));
                 }
             }
@@ -100,6 +107,29 @@ namespace Classification.Model
             }
 
             return result;
+        }
+
+        /**
+         * <summary> Training algorithm for K-nearest neighbor classifier.</summary>
+         *
+         * <param name="trainSet">  Training data given to the algorithm.</param>
+         * <param name="parameters">K: k parameter of the K-nearest neighbor algorithm
+         *                   distanceMetric: distance metric used to calculate the distance between two instances.</param>
+         */
+        public override void Train(InstanceList.InstanceList trainSet, Parameter.Parameter parameters)
+        {
+            _data = trainSet;
+            _k = ((KnnParameter)parameters).GetK();
+            _distanceMetric = ((KnnParameter)parameters).GetDistanceMetric();
+        }
+
+        /// <summary>
+        /// Loads the K-nearest neighbor model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the K-nearest neighbor model.</param>
+        public override void LoadModel(string fileName)
+        {
+            Load(fileName);
         }
 
 
@@ -134,7 +164,8 @@ namespace Classification.Model
         }
 
 
-        private class KnnInstanceComparator : IComparer<KnnInstance> {
+        private class KnnInstanceComparator : IComparer<KnnInstance>
+        {
             /**
              * The compare method takes two {@link KnnInstance}s as inputs and returns -1 if the distance of first instance is
              * less than the distance of second instance, 1 if the distance of first instance is greater than the distance of second instance,

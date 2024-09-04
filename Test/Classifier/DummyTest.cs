@@ -1,4 +1,4 @@
-using Classification.Classifier;
+using Classification.Model;
 using NUnit.Framework;
 
 namespace Test.Classifier
@@ -7,7 +7,7 @@ namespace Test.Classifier
     {
         [Test]
         public void TestTrain() {
-            var dummy = new Dummy();
+            var dummy = new DummyModel();
             dummy.Train(iris.GetInstanceList(), null);
             Assert.AreEqual(66.67, 100 * dummy.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
             dummy.Train(bupa.GetInstanceList(), null);
@@ -26,7 +26,7 @@ namespace Test.Classifier
 
         [Test]
         public void TestLoad() {
-            var dummy = new Dummy();
+            var dummy = new DummyModel();
             dummy.LoadModel("../../../models/dummy-iris.txt");
             Assert.AreEqual(66.67, 100 * dummy.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
             dummy.LoadModel("../../../models/dummy-bupa.txt");

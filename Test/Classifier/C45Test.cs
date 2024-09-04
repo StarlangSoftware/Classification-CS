@@ -1,4 +1,4 @@
-using Classification.Classifier;
+using Classification.Model.DecisionTree;
 using Classification.Parameter;
 using NUnit.Framework;
 
@@ -9,7 +9,7 @@ namespace Test.Classifier
         [Test]
         public void TestTrain()
         {
-            var c45 = new C45();
+            var c45 = new DecisionTree();
             var c45Parameter = new C45Parameter(1, true, 0.2);
             c45.Train(iris.GetInstanceList(), c45Parameter);
             Assert.AreEqual(4.00, 100 * c45.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
@@ -28,7 +28,7 @@ namespace Test.Classifier
         [Test]
         public void TestLoad()
         {
-            var c45 = new C45();
+            var c45 = new DecisionTree();
             c45.LoadModel("../../../models/c45-iris.txt");
             Assert.AreEqual(4.00, 100 * c45.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
             c45.LoadModel("../../../models/c45-bupa.txt");

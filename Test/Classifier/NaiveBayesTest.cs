@@ -1,4 +1,4 @@
-using Classification.Classifier;
+using Classification.Model;
 using NUnit.Framework;
 
 namespace Test.Classifier
@@ -8,7 +8,7 @@ namespace Test.Classifier
         [Test]
         public void TestTrain()
         {
-            var naiveBayes = new NaiveBayes();
+            var naiveBayes = new NaiveBayesModel();
             naiveBayes.Train(iris.GetInstanceList(), null);
             Assert.AreEqual(5.33, 100 * naiveBayes.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
             naiveBayes.Train(bupa.GetInstanceList(), null);
@@ -26,7 +26,7 @@ namespace Test.Classifier
         [Test]
         public void TestLoad()
         {
-            var naiveBayes = new NaiveBayes();
+            var naiveBayes = new NaiveBayesModel();
             naiveBayes.LoadModel("../../../models/naiveBayes-iris.txt");
             Assert.AreEqual(5.33, 100 * naiveBayes.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
             naiveBayes.LoadModel("../../../models/naiveBayes-bupa.txt");

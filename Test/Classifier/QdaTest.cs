@@ -1,4 +1,4 @@
-using Classification.Classifier;
+using Classification.Model;
 using NUnit.Framework;
 
 namespace Test.Classifier
@@ -8,7 +8,7 @@ namespace Test.Classifier
         [Test]
         public void TestTrain()
         {
-            var qda = new Qda();
+            var qda = new QdaModel();
             qda.Train(iris.GetInstanceList(), null);
             Assert.AreEqual(2.00, 100 * qda.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
             qda.Train(bupa.GetInstanceList(), null);
@@ -18,7 +18,7 @@ namespace Test.Classifier
         [Test]
         public void TestLoad()
         {
-            var qda = new Qda();
+            var qda = new QdaModel();
             qda.LoadModel("../../../models/qda-iris.txt");
             Assert.AreEqual(2.00, 100 * qda.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
             qda.LoadModel("../../../models/qda-bupa.txt");

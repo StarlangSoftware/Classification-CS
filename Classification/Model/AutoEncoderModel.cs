@@ -13,70 +13,12 @@ namespace Classification.Model
          * <summary> The allocateWeights method takes an integer number and sets layer weights of W and V matrices according to given number.</summary>
          *
          * <param name="H">Integer input.</param>
+         * <param name="random">Random generator</param>
          */
         private void AllocateWeights(int H, Random random)
         {
             _W = AllocateLayerWeights(H, d + 1, random);
             _V = AllocateLayerWeights(K, H + 1, random);
-        }
-
-        /**
-         * <summary> The {@link AutoEncoderModel} method takes two {@link InstanceList}s as inputs; train set and validation set. First it allocates
-         * the weights of W and V matrices using given {@link MultiLayerPerceptronParameter} and takes the clones of these matrices as the bestW and bestV.
-         * Then, it gets the epoch and starts to iterate over them. First it shuffles the train set and tries to find the new W and V matrices.
-         * At the end it tests the autoencoder with given validation set and if its performance is better than the previous one,
-         * it reassigns the bestW and bestV matrices. Continue to iterate with a lower learning rate till the end of an episode.</summary>
-         *
-         * <param name="trainSet">     {@link InstanceList} to use as train set.</param>
-         * <param name="validationSet">{@link InstanceList} to use as validation set.</param>
-         * <param name="parameters">   {@link MultiLayerPerceptronParameter} is used to get the parameters.</param>
-         */
-        public AutoEncoderModel(InstanceList.InstanceList trainSet, InstanceList.InstanceList validationSet,
-            MultiLayerPerceptronParameter parameters) : base(trainSet)
-        {
-            K = trainSet.Get(0).ContinuousAttributeSize();
-            AllocateWeights(parameters.GetHiddenNodes(), new Random(parameters.GetSeed()));
-            var bestW = (Matrix) _W.Clone();
-            var bestV = (Matrix) _V.Clone();
-            var bestPerformance = new Performance.Performance(double.MaxValue);
-            var epoch = parameters.GetEpoch();
-            var learningRate = parameters.GetLearningRate();
-            for (var i = 0; i < epoch; i++)
-            {
-                trainSet.Shuffle(parameters.GetSeed());
-                for (var j = 0; j < trainSet.Size(); j++)
-                {
-                    CreateInputVector(trainSet.Get(j));
-                    r = trainSet.Get(j).ToVector();
-                    var hidden = CalculateHidden(x, _W, ActivationFunction.SIGMOID);
-                    var hiddenBiased = hidden.Biased();
-                    y = _V.MultiplyWithVectorFromRight(hiddenBiased);
-                    var rMinusY = r.Difference(y);
-                    var deltaV = rMinusY.Multiply(hiddenBiased);
-                    var oneMinusHidden = CalculateOneMinusHidden(hidden);
-                    var tmph = _V.MultiplyWithVectorFromLeft(rMinusY);
-                    tmph.Remove(0);
-                    var tmpHidden = oneMinusHidden.ElementProduct(hidden.ElementProduct(tmph));
-                    var deltaW = tmpHidden.Multiply(x);
-                    deltaV.MultiplyWithConstant(learningRate);
-                    _V.Add(deltaV);
-                    deltaW.MultiplyWithConstant(learningRate);
-                    _W.Add(deltaW);
-                }
-
-                var currentPerformance = TestAutoEncoder(validationSet);
-                if (currentPerformance.GetErrorRate() < bestPerformance.GetErrorRate())
-                {
-                    bestPerformance = currentPerformance;
-                    bestW = (Matrix) _W.Clone();
-                    bestV = (Matrix) _V.Clone();
-                }
-
-                learningRate *= 0.95;
-            }
-
-            _W = bestW;
-            _V = bestV;
         }
 
         /**
@@ -124,6 +66,79 @@ namespace Classification.Model
         public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
         {
             return null;
+        }
+
+        /**
+         * <summary> Training algorithm for auto encoders. An auto encoder is a neural network which attempts to replicate its input at its output.</summary>
+         *
+         * <param name="train">  Training data given to the algorithm.</param>
+         * <param name="_params">Parameters of the auto encoder.</param>
+         */
+        public override void Train(InstanceList.InstanceList train, Parameter.Parameter _params)
+        {
+            Initialize(train);
+            var parameters = (MultiLayerPerceptronParameter) _params;
+            var partition = train.StratifiedPartition(0.2, new Random(_params.GetSeed()));
+            var trainSet = partition.Get(1);
+            var validationSet = partition.Get(0);
+            AllocateWeights(parameters.GetHiddenNodes(), new Random(parameters.GetSeed()));
+            var bestW = (Matrix)_W.Clone();
+            var bestV = (Matrix)_V.Clone();
+            var bestPerformance = new Performance.Performance(double.MaxValue);
+            var epoch = parameters.GetEpoch();
+            var learningRate = parameters.GetLearningRate();
+            for (var i = 0; i < epoch; i++)
+            {
+                trainSet.Shuffle(parameters.GetSeed());
+                for (var j = 0; j < trainSet.Size(); j++)
+                {
+                    CreateInputVector(trainSet.Get(j));
+                    r = trainSet.Get(j).ToVector();
+                    var hidden = CalculateHidden(x, _W, ActivationFunction.SIGMOID);
+                    var hiddenBiased = hidden.Biased();
+                    y = _V.MultiplyWithVectorFromRight(hiddenBiased);
+                    var rMinusY = r.Difference(y);
+                    var deltaV = rMinusY.Multiply(hiddenBiased);
+                    var oneMinusHidden = CalculateOneMinusHidden(hidden);
+                    var tmph = _V.MultiplyWithVectorFromLeft(rMinusY);
+                    tmph.Remove(0);
+                    var tmpHidden = oneMinusHidden.ElementProduct(hidden.ElementProduct(tmph));
+                    var deltaW = tmpHidden.Multiply(x);
+                    deltaV.MultiplyWithConstant(learningRate);
+                    _V.Add(deltaV);
+                    deltaW.MultiplyWithConstant(learningRate);
+                    _W.Add(deltaW);
+                }
+
+                var currentPerformance = TestAutoEncoder(validationSet);
+                if (currentPerformance.GetErrorRate() < bestPerformance.GetErrorRate())
+                {
+                    bestPerformance = currentPerformance;
+                    bestW = (Matrix)_W.Clone();
+                    bestV = (Matrix)_V.Clone();
+                }
+
+                learningRate *= 0.95;
+            }
+
+            _W = bestW;
+            _V = bestV;
+        }
+
+        public override void LoadModel(string fileName)
+        {
+        }
+
+
+        /**
+         * <summary> A performance test for an auto encoder with the given test set..</summary>
+         *
+         * <param name="testSet">Test data (list of instances) to be tested.</param>
+         * <returns>Error rate.</returns>
+         */
+        public override Performance.Performance Test(InstanceList.InstanceList testSet)
+        {
+            return TestAutoEncoder(testSet);
         }
     }
 }

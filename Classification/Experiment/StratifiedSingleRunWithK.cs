@@ -29,7 +29,7 @@ namespace Classification.Experiment
                     experiment.GetParameter().GetSeed());
             var trainSet = new InstanceList.InstanceList(crossValidation.GetTrainFold(0));
             var testSet = new InstanceList.InstanceList(crossValidation.GetTestFold(0));
-            return experiment.GetClassifier().SingleRun(experiment.GetParameter(), trainSet, testSet);
+            return experiment.GetModel().SingleRun(experiment.GetParameter(), trainSet, testSet);
         }
     }
 }

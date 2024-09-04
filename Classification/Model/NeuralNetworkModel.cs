@@ -15,24 +15,18 @@ namespace Classification.Model
 
         protected abstract void CalculateOutput();
 
-        /**
-         * <summary> Constructor that sets the class labels, their sizes as K and the size of the continuous attributes as d.</summary>
-         *
-         * <param name="trainSet">{@link InstanceList} to use as train set.</param>
-         */
-        public NeuralNetworkModel(InstanceList.InstanceList trainSet)
-        {
-            classLabels = trainSet.GetDistinctClassLabels();
-            K = classLabels.Count;
-            d = trainSet.Get(0).ContinuousAttributeSize();
-        }
-
         /// <summary>
         /// Default constructor
         /// </summary>
         public NeuralNetworkModel()
         {
-            
+        }
+
+        protected void Initialize(InstanceList.InstanceList train)
+        {
+            classLabels = train.GetDistinctClassLabels();
+            K = classLabels.Count;
+            d = train.Get(0).ContinuousAttributeSize();
         }
 
         /**
@@ -40,6 +34,7 @@ namespace Classification.Model
          *
          * <param name="row">   Number of rows.</param>
          * <param name="column">Number of columns.</param>
+         * <param name="random"> Random generator</param>
          * <returns>Matrix with random weights.</returns>
          */
         protected Matrix AllocateLayerWeights(int row, int column, Random random)

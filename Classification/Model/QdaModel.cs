@@ -1,26 +1,37 @@
 using System.Collections.Generic;
 using System.IO;
+using Classification.InstanceList;
 using Math;
 
 namespace Classification.Model
 {
     public class QdaModel : LdaModel
     {
-        private readonly Dictionary<string, Matrix> _W;
+        private Dictionary<string, Matrix> _W;
 
-        /**
-         * <summary> The constructor which sets the priorDistribution, w w1 and HashMap of String Matrix.</summary>
-         *
-         * <param name="priorDistribution">{@link DiscreteDistribution} input.</param>
-         * <param name="W">                {@link HashMap} of String and Matrix.</param>
-         * <param name="w">                {@link HashMap} of String and Vectors.</param>
-         * <param name="w0">               {@link HashMap} of String and Double.</param>
-         */
-        public QdaModel(DiscreteDistribution priorDistribution, Dictionary<string, Matrix> W,
-            Dictionary<string, Vector> w,
-            Dictionary<string, double> w0) : base(priorDistribution, w, w0)
+        public QdaModel()
         {
-            _W = W;
+
+        }
+
+        /// <summary>
+        /// Loads a quadratic discriminant analysis model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
+        private new void Load(string fileName)
+        {
+            var input = new StreamReader(fileName);
+            var size = LoadPriorDistribution(input);
+            LoadWandW0(input, size);
+            _W = new Dictionary<string, Matrix>();
+            for (var i = 0; i < size; i++)
+            {
+                var c = input.ReadLine();
+                var matrix = LoadMatrix(input);
+                _W[c] = matrix;
+            }
+
+            input.Close();
         }
 
         /// <summary>
@@ -29,17 +40,9 @@ namespace Classification.Model
         /// <param name="fileName">Model file name.</param>
         public QdaModel(string fileName)
         {
-            var input = new StreamReader(fileName);
-            var size = LoadPriorDistribution(input);
-            LoadWandW0(input, size);
-            _W = new Dictionary<string, Matrix>();
-            for (var i = 0; i < size; i++){
-                var c = input.ReadLine();
-                var matrix = LoadMatrix(input);
-                _W[c] = matrix;
-            }
-            input.Close();
+            Load(fileName);
         }
+
         /**
          * <summary> The calculateMetric method takes an {@link Instance} and a String as inputs. It multiplies Matrix Wi with Vector xi
          * then calculates the dot product of it with xi. Then, again it finds the dot product of wi and xi and returns the summation with w0i.</summary>
@@ -53,8 +56,51 @@ namespace Classification.Model
             var xi = instance.ToVector();
             var Wi = _W[ci];
             var wi = w[ci];
-            var w0i = w0[ci];
-            return Wi.MultiplyWithVectorFromLeft(xi).DotProduct(xi) + wi.DotProduct(xi) + w0i;
+            var w0I = w0[ci];
+            return Wi.MultiplyWithVectorFromLeft(xi).DotProduct(xi) + wi.DotProduct(xi) + w0I;
+        }
+
+        /**
+         * <summary> Training algorithm for the quadratic discriminant analysis classifier (Introduction to Machine Learning, Alpaydin, 2015).</summary>
+         *
+         * <param name="trainSet">  Training data given to the algorithm.</param>
+         * <param name="parameters">-</param>
+         */
+        public override void Train(InstanceList.InstanceList trainSet, Parameter.Parameter parameters)
+        {
+            w0 = new Dictionary<string, double>();
+            w = new Dictionary<string, Vector>();
+            _W = new Dictionary<string, Matrix>();
+            var classLists = trainSet.DivideIntoClasses();
+
+            priorDistribution = trainSet.ClassDistribution();
+            for (var i = 0; i < classLists.Size(); i++)
+            {
+                var ci = ((InstanceListOfSameClass)classLists.Get(i)).GetClassLabel();
+                var averageVector = new Vector(classLists.Get(i).ContinuousAttributeAverage());
+                var classCovariance = classLists.Get(i).Covariance(averageVector);
+                var determinant = classCovariance.Determinant();
+                classCovariance.Inverse();
+
+                var Wi = (Matrix)classCovariance.Clone();
+                Wi.MultiplyWithConstant(-0.5);
+                _W[ci] = Wi;
+                var wi = classCovariance.MultiplyWithVectorFromLeft(averageVector);
+                w[ci] = wi;
+                var w0I = -0.5 * (wi.DotProduct(averageVector) + System.Math.Log(determinant)) +
+                          System.Math.Log(priorDistribution.GetProbability(ci));
+                w0[ci] = w0I;
+            }
+
+        }
+
+        /// <summary>
+        /// Loads the Qda model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the Qda model.</param>
+        public override void LoadModel(string fileName)
+        {
+            Load(fileName);
         }
     }
 }

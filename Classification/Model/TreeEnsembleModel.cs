@@ -5,25 +5,15 @@ using Math;
 
 namespace Classification.Model
 {
-    public class TreeEnsembleModel : Model
+    public abstract class TreeEnsembleModel : Model
     {
-        private readonly List<DecisionTree.DecisionTree> _forest;
-
-        /**
-         * <summary> A constructor which sets the {@link ArrayList} of {@link DecisionTree} with given input.</summary>
-         *
-         * <param name="forest">An {@link ArrayList} of {@link DecisionTree}.</param>
-         */
-        public TreeEnsembleModel(List<DecisionTree.DecisionTree> forest)
-        {
-            _forest = forest;
-        }
-
+        protected List<DecisionTree.DecisionTree> _forest;
+        
         /// <summary>
         /// Loads a tree ensemble model such as Random Forest model or Bagging model from an input model file.
         /// </summary>
         /// <param name="fileName">Model file name.</param>
-        public TreeEnsembleModel(string fileName)
+        public void Load(string fileName)
         {
             var input = new StreamReader(fileName);
             var numberOfTrees = int.Parse(input.ReadLine());

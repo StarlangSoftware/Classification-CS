@@ -443,7 +443,7 @@ namespace Classification.InstanceList
                     values.Add(((DiscreteAttribute) instance.GetAttribute(index)).GetValue());
                 }
 
-                return new DiscreteAttribute(Classifier.Classifier.GetMaximum(values));
+                return new DiscreteAttribute(Model.Model.GetMaximum(values));
             }
 
             if (_list[0].GetAttribute(index) is ContinuousAttribute)

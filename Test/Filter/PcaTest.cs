@@ -1,6 +1,6 @@
-using Classification.Classifier;
 using Classification.DistanceMetric;
 using Classification.Filter;
+using Classification.Model;
 using Classification.Parameter;
 using NUnit.Framework;
 using Test.Classifier;
@@ -12,7 +12,7 @@ namespace Test.Filter
         [Test]
         public void TestLinearPerceptron()
         {
-            var linearPerceptron = new LinearPerceptron();
+            var linearPerceptron = new LinearPerceptronModel();
             var linearPerceptronParameter = new LinearPerceptronParameter(1, 0.1, 0.99, 0.2, 100);
             var pca = new Pca(iris);
             pca.Convert();
@@ -32,7 +32,7 @@ namespace Test.Filter
         [Test]
         public void TestKnn()
         {
-            var knn = new Knn();
+            var knn = new KnnModel();
             var knnParameter = new KnnParameter(1, 3, new EuclidianDistance());
             var pca = new Pca(iris);
             pca.Convert();

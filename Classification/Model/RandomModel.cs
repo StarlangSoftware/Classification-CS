@@ -7,37 +7,38 @@ namespace Classification.Model
 {
     public class RandomModel : Model
     {
-        private readonly List<string> _classLabels;
-        private Random random;
+        private List<string> _classLabels;
+        private Random _random;
         private int _seed;
 
-        /**
-         * <summary> A constructor that sets the class labels.</summary>
-         *
-         * <param name="classLabels">An List of class labels.</param>
-         */
-        public RandomModel(List<string> classLabels, int seed)
+        public RandomModel()
         {
-            _classLabels = classLabels;
-            _seed = seed;
-            random = new Random(seed);
         }
 
         /// <summary>
         /// Loads a random classifier model from an input model file.
         /// </summary>
         /// <param name="fileName">Model file name.</param>
-        public RandomModel(string fileName)
+        private void Load(string fileName)
         {
             var input = new StreamReader(fileName);
             _seed = int.Parse(input.ReadLine());
-            random = new Random(_seed);
+            _random = new Random(_seed);
             var size = int.Parse(input.ReadLine());
             _classLabels = new List<string>();
             for (var i = 0; i < size; i++){
                 _classLabels.Add(input.ReadLine());
             }
             input.Close();
+        }
+        
+        /// <summary>
+        /// Loads a random classifier model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
+        public RandomModel(string fileName)
+        {
+            Load(fileName);
         }
         
         /**
@@ -52,11 +53,11 @@ namespace Classification.Model
             if (instance is CompositeInstance compositeInstance) {
                 var possibleClassLabels = compositeInstance.GetPossibleClassLabels();
                 var size = possibleClassLabels.Count;
-                var index = random.Next(size);
+                var index = _random.Next(size);
                 return possibleClassLabels[index];
             } else {
                 var size = _classLabels.Count;
-                var index = random.Next(size);
+                var index = _random.Next(size);
                 return _classLabels[index];
             }
         }
@@ -76,5 +77,27 @@ namespace Classification.Model
 
             return result;
         }
+        
+        /**
+         * <summary> Training algorithm for random classifier.</summary>
+         *
+         * <param name="trainSet">  Training data given to the algorithm.</param>
+         * <param name="parameters">-</param>
+         */
+        public override void Train(InstanceList.InstanceList trainSet, Parameter.Parameter parameters) {
+            _classLabels = new List<string>(trainSet.ClassDistribution().Keys);
+            _seed = parameters.GetSeed();
+            _random = new Random(_seed);
+        }
+
+        /// <summary>
+        /// Loads the random classifier model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the random classifier model.</param>
+        public override void LoadModel(string fileName)
+        {
+            Load(fileName);
+        }
+
     }
 }

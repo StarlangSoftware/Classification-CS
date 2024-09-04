@@ -10,21 +10,24 @@ namespace Classification.Model
     {
         protected Matrix W;
 
-        /**
-         * <summary> Constructor that sets the {@link NeuralNetworkModel} nodes with given {@link InstanceList}.</summary>
-         *
-         * <param name="trainSet">InstanceList that is used to train.</param>
-         */
-        public LinearPerceptronModel(InstanceList.InstanceList trainSet) : base(trainSet)
-        {
-        }
-
         /// <summary>
         /// Default constructor
         /// </summary>
         public LinearPerceptronModel()
         {
             
+        }
+
+        /// <summary>
+        /// Loads a linear perceptron model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
+        private void Load(string fileName)
+        {
+            var input = new StreamReader(fileName);
+            LoadClassLabels(input);
+            W = LoadMatrix(input);
+            input.Close();
         }
         
         /// <summary>
@@ -33,23 +36,33 @@ namespace Classification.Model
         /// <param name="fileName">Model file name.</param>
         public LinearPerceptronModel(string fileName)
         {
-            var input = new StreamReader(fileName);
-            LoadClassLabels(input);
-            W = LoadMatrix(input);
-            input.Close();
+            Load(fileName);
         }
+
         /**
-         * <summary> Constructor that takes {@link InstanceList}s as trainsSet and validationSet. Initially it allocates layer weights,
-         * then creates an input vector by using given trainSet and finds error. Via the validationSet it finds the classification
-         * performance and at the end it reassigns the allocated weight Matrix with the matrix that has the best accuracy.</summary>
-         *
-         * <param name="trainSet">     InstanceList that is used to train.</param>
-         * <param name="validationSet">InstanceList that is used to validate.</param>
-         * <param name="parameters">   Linear perceptron parameters; learningRate, etaDecrease, crossValidationRatio, epoch.</param>
+         * <summary> The calculateOutput method calculates the {@link Matrix} y by multiplying Matrix W with {@link Vector} x.</summary>
          */
-        public LinearPerceptronModel(InstanceList.InstanceList trainSet, InstanceList.InstanceList validationSet,
-            LinearPerceptronParameter parameters) : base(trainSet)
+        protected override void CalculateOutput()
         {
+            y = W.MultiplyWithVectorFromRight(x);
+        }
+        
+        /**
+         * <summary> Training algorithm for the linear perceptron algorithm. 20 percent of the data is separated as cross-validation
+         * data used for selecting the best weights. 80 percent of the data is used for training the linear perceptron with
+         * gradient descent.</summary>
+         *
+         * <param name="train">  Training data given to the algorithm</param>
+         * <param name="_params">Parameters of the linear perceptron.</param>
+         */
+        public override void Train(InstanceList.InstanceList train, Parameter.Parameter _params)
+        {
+            Initialize(train);
+            var parameters = (LinearPerceptronParameter) _params;
+            var partition = train.StratifiedPartition(
+                parameters.GetCrossValidationRatio(), new Random(parameters.GetSeed()));
+            var trainSet = partition.Get(1);
+            var validationSet = partition.Get(0);
             W = AllocateLayerWeights(K, d + 1, new Random(parameters.GetSeed()));
             var bestW = (Matrix) W.Clone();
             var bestClassificationPerformance = new ClassificationPerformance(0.0);
@@ -78,14 +91,17 @@ namespace Classification.Model
             }
 
             W = bestW;
+
         }
 
-        /**
-         * <summary> The calculateOutput method calculates the {@link Matrix} y by multiplying Matrix W with {@link Vector} x.</summary>
-         */
-        protected override void CalculateOutput()
+        /// <summary>
+        /// Loads the linear perceptron model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the linear perceptron model.</param>
+        public override void LoadModel(string fileName)
         {
-            y = W.MultiplyWithVectorFromRight(x);
+            Load(fileName);
         }
+
     }
 }

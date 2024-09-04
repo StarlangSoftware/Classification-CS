@@ -1,4 +1,4 @@
-using Classification.Classifier;
+using Classification.Model;
 using Classification.Parameter;
 using NUnit.Framework;
 
@@ -9,7 +9,7 @@ namespace Test.Classifier
         [Test]
         public void TestTrain()
         {
-            var kMeans = new KMeans();
+            var kMeans = new KMeansModel();
             var kMeansParameter = new KMeansParameter(1);
             kMeans.Train(iris.GetInstanceList(), kMeansParameter);
             Assert.AreEqual(7.33, 100 * kMeans.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
@@ -30,7 +30,7 @@ namespace Test.Classifier
         [Test]
         public void TestLoad()
         {
-            var kMeans = new KMeans();
+            var kMeans = new KMeansModel();
             kMeans.LoadModel("../../../models/kMeans-iris.txt");
             Assert.AreEqual(7.33, 100 * kMeans.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
             kMeans.LoadModel("../../../models/kMeans-bupa.txt");

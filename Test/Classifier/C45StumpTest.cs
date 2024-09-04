@@ -1,4 +1,4 @@
-using Classification.Classifier;
+using Classification.Model.DecisionTree;
 using NUnit.Framework;
 
 namespace Test.Classifier
@@ -8,7 +8,7 @@ namespace Test.Classifier
         [Test]
         public void TestTrain()
         {
-            var c45Stump = new C45Stump();
+            var c45Stump = new DecisionStump();
             c45Stump.Train(iris.GetInstanceList(), null);
             Assert.AreEqual(33.33, 100 * c45Stump.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
             c45Stump.Train(bupa.GetInstanceList(), null);

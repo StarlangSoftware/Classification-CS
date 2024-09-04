@@ -15,6 +15,7 @@ namespace Classification.Model
          * <summary> The allocateWeights method allocates layers' weights of Matrix W and V.</summary>
          *
          * <param name="H">Integer value for weights.</param>
+         * <param name="random">Random number generator</param>
          */
         private void AllocateWeights(int H, Random random)
         {
@@ -26,7 +27,7 @@ namespace Classification.Model
         /// Loads a multi-layer perceptron model from an input model file.
         /// </summary>
         /// <param name="fileName">Model file name.</param>
-        public MultiLayerPerceptronModel(string fileName)
+        private void Load(string fileName)
         {
             var input = new StreamReader(fileName);
             LoadClassLabels(input);
@@ -35,24 +36,48 @@ namespace Classification.Model
             _activationFunction = LoadActivationFunction(input);
             input.Close();
         }
-        
-        /**
-         * <summary> A constructor that takes {@link InstanceList}s as trainsSet and validationSet. It  sets the {@link NeuralNetworkModel}
-         * nodes with given {@link InstanceList} then creates an input vector by using given trainSet and finds error.
-         * Via the validationSet it finds the classification performance and reassigns the allocated weight Matrix with the matrix
-         * that has the best accuracy and the Matrix V with the best Vector input.</summary>
-         *
-         * <param name="trainSet">     InstanceList that is used to train.</param>
-         * <param name="validationSet">InstanceList that is used to validate.</param>
-         * <param name="parameters">   Multi layer perceptron parameters; seed, learningRate, etaDecrease, crossValidationRatio, epoch, hiddenNodes.</param>
-         */
-        public MultiLayerPerceptronModel(InstanceList.InstanceList trainSet, InstanceList.InstanceList validationSet,
-            MultiLayerPerceptronParameter parameters) : base(trainSet)
+
+        /// <summary>
+        /// Loads a multi-layer perceptron model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
+        public MultiLayerPerceptronModel(string fileName)
         {
+            Load(fileName);
+        }
+
+        public MultiLayerPerceptronModel()
+        {
+        }
+
+        /**
+         * <summary> The calculateOutput method calculates the forward single hidden layer by using Matrices W and V.</summary>
+         */
+        protected override void CalculateOutput()
+        {
+            CalculateForwardSingleHiddenLayer(W, _V, _activationFunction);
+        }
+
+        /**
+         * <summary> Training algorithm for the multilayer perceptron algorithm. 20 percent of the data is separated as cross-validation
+         * data used for selecting the best weights. 80 percent of the data is used for training the multilayer perceptron with
+         * gradient descent.</summary>
+         *
+         * <param name="train">  Training data given to the algorithm</param>
+         * <param name="_params">Parameters of the multilayer perceptron.</param>
+         */
+        public override void Train(InstanceList.InstanceList train, Parameter.Parameter _params)
+        {
+            Initialize(train);
+            var parameters = (MultiLayerPerceptronParameter)_params;
+            var partition =
+                train.StratifiedPartition(parameters.GetCrossValidationRatio(), new Random(parameters.GetSeed()));
+            var trainSet = partition.Get(1);
+            var validationSet = partition.Get(0);
             _activationFunction = parameters.GetActivationFunction();
             AllocateWeights(parameters.GetHiddenNodes(), new Random(parameters.GetSeed()));
-            var bestW = (Matrix) W.Clone();
-            var bestV = (Matrix) _V.Clone();
+            var bestW = (Matrix)W.Clone();
+            var bestV = (Matrix)_V.Clone();
             var bestClassificationPerformance = new ClassificationPerformance(0.0);
             var epoch = parameters.GetEpoch();
             var learningRate = parameters.GetLearningRate();
@@ -85,6 +110,7 @@ namespace Classification.Model
                             activationDerivative = hidden;
                             break;
                     }
+
                     var tmpHidden = tmph.ElementProduct(activationDerivative);
                     var deltaW = tmpHidden.Multiply(x);
                     deltaV.MultiplyWithConstant(learningRate);
@@ -97,8 +123,8 @@ namespace Classification.Model
                 if (currentClassificationPerformance.GetAccuracy() > bestClassificationPerformance.GetAccuracy())
                 {
                     bestClassificationPerformance = currentClassificationPerformance;
-                    bestW = (Matrix) W.Clone();
-                    bestV = (Matrix) _V.Clone();
+                    bestW = (Matrix)W.Clone();
+                    bestV = (Matrix)_V.Clone();
                 }
 
                 learningRate *= parameters.GetEtaDecrease();
@@ -108,12 +134,13 @@ namespace Classification.Model
             _V = bestV;
         }
 
-        /**
-         * <summary> The calculateOutput method calculates the forward single hidden layer by using Matrices W and V.</summary>
-         */
-        protected override void CalculateOutput()
+        /// <summary>
+        /// Loads the multi-layer perceptron model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the multi-layer perceptron model.</param>
+        public override void LoadModel(string fileName)
         {
-            CalculateForwardSingleHiddenLayer(W, _V, _activationFunction);
+            Load(fileName);
         }
     }
 }

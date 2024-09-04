@@ -52,7 +52,7 @@ namespace Classification.Model.DecisionTree
             foreach (var label in labels){
                 _classLabelsDistribution.AddItem(label);
             }
-            _classLabel = Classifier.Classifier.GetMaximum(labels);
+            _classLabel = Model.GetMaximum(labels);
             _leaf = true;
             var classLabels = data.GetDistinctClassLabels();
             if (classLabels.Count == 1)

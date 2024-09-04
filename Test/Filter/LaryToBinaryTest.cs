@@ -1,6 +1,7 @@
-using Classification.Classifier;
 using Classification.DistanceMetric;
 using Classification.Filter;
+using Classification.Model;
+using Classification.Model.DecisionTree;
 using Classification.Parameter;
 using NUnit.Framework;
 using Test.Classifier;
@@ -12,7 +13,7 @@ namespace Test.Filter
         [Test]
         public void TestKnn()
         {
-            var knn = new Knn();
+            var knn = new KnnModel();
             var knnParameter = new KnnParameter(1, 3, new EuclidianDistance());
             var laryToBinary = new LaryToBinary(car);
             laryToBinary.Convert();
@@ -27,7 +28,7 @@ namespace Test.Filter
         [Test]
         public void TestC45()
         {
-            var c45 = new C45();
+            var c45 = new DecisionTree();
             var c45Parameter = new C45Parameter(1, true, 0.2);
             var laryToBinary = new LaryToBinary(car);
             laryToBinary.Convert();

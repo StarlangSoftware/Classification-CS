@@ -1,4 +1,4 @@
-using Classification.Classifier;
+using Classification.Model;
 using NUnit.Framework;
 
 namespace Test.Classifier
@@ -8,7 +8,7 @@ namespace Test.Classifier
         [Test]
         public void TestTrain()
         {
-            var lda = new Lda();
+            var lda = new LdaModel();
             lda.Train(iris.GetInstanceList(), null);
             Assert.AreEqual(2.00, 100 * lda.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
             lda.Train(bupa.GetInstanceList(), null);
@@ -20,7 +20,7 @@ namespace Test.Classifier
         [Test]
         public void TestLoad()
         {
-            var lda = new Lda();
+            var lda = new LdaModel();
             lda.LoadModel("../../../models/lda-iris.txt");
             Assert.AreEqual(2.00, 100 * lda.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
             lda.LoadModel("../../../models/lda-bupa.txt");

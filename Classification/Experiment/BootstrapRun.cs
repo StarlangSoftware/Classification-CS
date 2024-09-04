@@ -31,8 +31,8 @@ namespace Classification.Experiment
                 var bootstrap = new Bootstrap<Instance.Instance>(experiment.GetDataSet().GetInstances(),
                     i + experiment.GetParameter().GetSeed());
                 var bootstrapSample = new InstanceList.InstanceList(bootstrap.GetSample());
-                experiment.GetClassifier().Train(bootstrapSample, experiment.GetParameter());
-                result.Add(experiment.GetClassifier().Test(experiment.GetDataSet().GetInstanceList()));
+                experiment.GetModel().Train(bootstrapSample, experiment.GetParameter());
+                result.Add(experiment.GetModel().Test(experiment.GetDataSet().GetInstanceList()));
             }
 
             return result;

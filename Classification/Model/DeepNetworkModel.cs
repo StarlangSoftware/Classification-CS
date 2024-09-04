@@ -22,13 +22,16 @@ namespace Classification.Model
          */
         private void AllocateWeights(DeepNetworkParameter parameters)
         {
-            _weights = new List<Matrix> {AllocateLayerWeights(parameters.GetHiddenNodes(0), d + 1, new Random(parameters.GetSeed()))};
+            _weights = new List<Matrix>
+                { AllocateLayerWeights(parameters.GetHiddenNodes(0), d + 1, new Random(parameters.GetSeed())) };
             for (var i = 0; i < parameters.LayerSize() - 1; i++)
             {
-                _weights.Add(AllocateLayerWeights(parameters.GetHiddenNodes(i + 1), parameters.GetHiddenNodes(i) + 1, new Random(parameters.GetSeed())));
+                _weights.Add(AllocateLayerWeights(parameters.GetHiddenNodes(i + 1), parameters.GetHiddenNodes(i) + 1,
+                    new Random(parameters.GetSeed())));
             }
 
-            _weights.Add(AllocateLayerWeights(K, parameters.GetHiddenNodes(parameters.LayerSize() - 1) + 1, new Random(parameters.GetSeed())));
+            _weights.Add(AllocateLayerWeights(K, parameters.GetHiddenNodes(parameters.LayerSize() - 1) + 1,
+                new Random(parameters.GetSeed())));
             _hiddenLayerSize = parameters.LayerSize();
         }
 
@@ -43,28 +46,83 @@ namespace Classification.Model
             var bestWeights = new List<Matrix>();
             foreach (var m in _weights)
             {
-                bestWeights.Add((Matrix) m.Clone());
+                bestWeights.Add((Matrix)m.Clone());
             }
 
             return bestWeights;
         }
 
-        /**
-         * <summary> Constructor that takes two {@link InstanceList} train set and validation set and {@link DeepNetworkParameter} as inputs.
-         * First it sets the class labels, their sizes as K and the size of the continuous attributes as d of given train set and
-         * allocates weights and sets the best weights. At each epoch, it shuffles the train set and loops through the each item of that train set,
-         * it multiplies the weights Matrix with input Vector than applies the sigmoid function and stores the result as hidden and add bias.
-         * Then updates weights and at the end it compares the performance of these weights with validation set. It updates the bestClassificationPerformance and
-         * bestWeights according to the current situation. At the end it updates the learning rate via etaDecrease value and finishes
-         * with clearing the weights.</summary>
-         *
-         * <param name="trainSet">     {@link InstanceList} to be used as trainSet.</param>
-         * <param name="validationSet">{@link InstanceList} to be used as validationSet.</param>
-         * <param name="parameters">   {@link DeepNetworkParameter} input.</param>
-         */
-        public DeepNetworkModel(InstanceList.InstanceList trainSet, InstanceList.InstanceList validationSet,
-            DeepNetworkParameter parameters) : base(trainSet)
+        public DeepNetworkModel()
         {
+        }
+
+        /// <summary>
+        /// Loads a deep network model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
+        private void Load(string fileName)
+        {
+            var input = new StreamReader(fileName);
+            LoadClassLabels(input);
+            _hiddenLayerSize = int.Parse(input.ReadLine());
+            _weights = new List<Matrix>();
+            for (var i = 0; i < _hiddenLayerSize + 1; i++)
+            {
+                _weights.Add(LoadMatrix(input));
+            }
+
+            _activationFunction = LoadActivationFunction(input);
+            input.Close();
+        }
+
+        /// <summary>
+        /// Loads a deep network model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
+        public DeepNetworkModel(string fileName)
+        {
+            Load(fileName);
+        }
+
+        /**
+         * <summary> The calculateOutput method loops size of the weights times and calculate one hidden layer at a time and adds bias term.
+         * At the end it updates the output y value.</summary>
+         */
+        protected override void CalculateOutput()
+        {
+            Vector hiddenBiased = null;
+            for (var i = 0; i < _weights.Count - 1; i++)
+            {
+                Vector hidden;
+                if (i == 0)
+                {
+                    hidden = CalculateHidden(x, _weights[i], _activationFunction);
+                }
+                else
+                {
+                    hidden = CalculateHidden(hiddenBiased, _weights[i], _activationFunction);
+                }
+
+                hiddenBiased = hidden.Biased();
+            }
+
+            y = _weights[_weights.Count - 1].MultiplyWithVectorFromRight(hiddenBiased);
+        }
+
+        /**
+         * <summary> Training algorithm for deep network classifier.</summary>
+         *
+         * <param name="train">  Training data given to the algorithm.</param>
+         * <param name="_params">Parameters of the deep network algorithm. crossValidationRatio and seed are used as parameters.</param>
+         */
+        public override void Train(InstanceList.InstanceList train, Parameter.Parameter _params)
+        {
+            Initialize(train);
+            var parameters = ((DeepNetworkParameter)_params);
+            var partition =
+                train.StratifiedPartition(parameters.GetCrossValidationRatio(), new Random(parameters.GetSeed()));
+            var trainSet = partition.Get(1);
+            var validationSet = partition.Get(0);
             var deltaWeights = new List<Matrix>();
             var hidden = new List<Vector>();
             var hiddenBiased = new List<Vector>();
@@ -73,7 +131,7 @@ namespace Classification.Model
             var bestWeights = SetBestWeights();
             var bestClassificationPerformance = new ClassificationPerformance(0.0);
             var epoch = parameters.GetEpoch();
-            var learningRate = parameters.GetLearningRate(); 
+            var learningRate = parameters.GetLearningRate();
             Vector tmph;
             var tmpHidden = new Vector(1, 0.0);
             var activationDerivative = new Vector(1, 0.0);
@@ -113,6 +171,7 @@ namespace Classification.Model
                         {
                             tmph = _weights[k + 1].MultiplyWithVectorFromLeft(tmpHidden);
                         }
+
                         tmph.Remove(0);
                         switch (_activationFunction)
                         {
@@ -130,6 +189,7 @@ namespace Classification.Model
                                 activationDerivative = hidden[k];
                                 break;
                         }
+
                         tmpHidden = tmph.ElementProduct(activationDerivative);
                         if (k == 0)
                         {
@@ -166,45 +226,12 @@ namespace Classification.Model
         }
 
         /// <summary>
-        /// Loads a deep network model from an input model file.
+        /// Loads the deep network model from an input file.
         /// </summary>
-        /// <param name="fileName">Model file name.</param>
-        public DeepNetworkModel(string fileName)
+        /// <param name="fileName">File name of the deep network model.</param>
+        public override void LoadModel(string fileName)
         {
-            var input = new StreamReader(fileName);
-            LoadClassLabels(input);
-            _hiddenLayerSize = int.Parse(input.ReadLine());
-            _weights = new List<Matrix>();
-            for (var i = 0; i < _hiddenLayerSize + 1; i++){
-                _weights.Add(LoadMatrix(input));
-            }
-            _activationFunction = LoadActivationFunction(input);
-            input.Close();
-        }
-        
-        /**
-         * <summary> The calculateOutput method loops size of the weights times and calculate one hidden layer at a time and adds bias term.
-         * At the end it updates the output y value.</summary>
-         */
-        protected override void CalculateOutput()
-        {
-            Vector hiddenBiased = null;
-            for (var i = 0; i < _weights.Count - 1; i++)
-            {
-                Vector hidden;
-                if (i == 0)
-                {
-                    hidden = CalculateHidden(x, _weights[i], _activationFunction);
-                }
-                else
-                {
-                    hidden = CalculateHidden(hiddenBiased, _weights[i], _activationFunction);
-                }
-
-                hiddenBiased = hidden.Biased();
-            }
-
-            y = _weights[_weights.Count - 1].MultiplyWithVectorFromRight(hiddenBiased);
+            Load(fileName);
         }
     }
 }

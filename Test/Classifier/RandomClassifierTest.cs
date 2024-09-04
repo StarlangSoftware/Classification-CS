@@ -1,4 +1,4 @@
-using Classification.Classifier;
+using Classification.Model;
 using Classification.Parameter;
 using NUnit.Framework;
 
@@ -9,7 +9,7 @@ namespace Test.Classifier
         [Test]
         public void TestTrain()
         {
-            var randomClassifier = new RandomClassifier();
+            var randomClassifier = new RandomModel();
             var parameter = new Parameter(1);
             randomClassifier.Train(iris.GetInstanceList(), parameter);
             Assert.AreEqual(69.33, 100 * randomClassifier.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
@@ -30,7 +30,7 @@ namespace Test.Classifier
         [Test]
         public void TestLoad()
         {
-            var randomClassifier = new RandomClassifier();
+            var randomClassifier = new RandomModel();
             randomClassifier.LoadModel("../../../models/random-iris.txt");
             Assert.AreEqual(69.33, 100 * randomClassifier.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
             randomClassifier.LoadModel("../../../models/random-bupa.txt");

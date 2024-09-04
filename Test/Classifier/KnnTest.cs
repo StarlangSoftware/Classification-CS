@@ -1,5 +1,5 @@
-using Classification.Classifier;
 using Classification.DistanceMetric;
+using Classification.Model;
 using Classification.Parameter;
 using NUnit.Framework;
 
@@ -10,7 +10,7 @@ namespace Test.Classifier
         [Test]
         public void TestTrain()
         {
-            var knn = new Knn();
+            var knn = new KnnModel();
             var knnParameter = new KnnParameter(1, 3, new EuclidianDistance());
             knn.Train(iris.GetInstanceList(), knnParameter);
             Assert.AreEqual(4.00, 100 * knn.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
@@ -27,7 +27,7 @@ namespace Test.Classifier
         [Test]
         public void TestLoad()
         {
-            var knn = new Knn();
+            var knn = new KnnModel();
             knn.LoadModel("../../../models/knn-iris.txt");
             Assert.AreEqual(4.00, 100 * knn.Test(iris.GetInstanceList()).GetErrorRate(), 0.01);
             knn.LoadModel("../../../models/knn-bupa.txt");

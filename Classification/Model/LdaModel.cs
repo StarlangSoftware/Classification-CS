@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
+using Classification.InstanceList;
 using Math;
 
 namespace Classification.Model
@@ -9,22 +9,7 @@ namespace Classification.Model
     {
         protected Dictionary<string, double> w0;
         protected Dictionary<string, Vector> w;
-
-        /**
-         * <summary> A constructor which sets the priorDistribution, w and w0 according to given inputs.</summary>
-         *
-         * <param name="priorDistribution">{@link DiscreteDistribution} input.</param>
-         * <param name="w">                {@link HashMap} of String and Vectors.</param>
-         * <param name="w0">               {@link HashMap} of String and Double.</param>
-         */
-        public LdaModel(DiscreteDistribution priorDistribution, Dictionary<string, Vector> w,
-            Dictionary<string, double> w0)
-        {
-            this.priorDistribution = priorDistribution;
-            this.w = w;
-            this.w0 = w0;
-        }
-
+        
         public LdaModel()
         {
             
@@ -42,7 +27,7 @@ namespace Classification.Model
             {
                 var line = input.ReadLine();
                 var items = line.Split(" ");
-                w0[items[0]] =  Double.Parse(items[1]);
+                w0[items[0]] =  double.Parse(items[1]);
             }
 
             w = LoadVectors(input, size);
@@ -52,7 +37,7 @@ namespace Classification.Model
         /// Loads a Linear Discriminant Analysis model from an input model file.
         /// </summary>
         /// <param name="fileName">Model file name.</param>
-        public LdaModel(string fileName)
+        public void Load(string fileName)
         {
             var input = new StreamReader(fileName);
             var size = LoadPriorDistribution(input);
@@ -60,20 +45,77 @@ namespace Classification.Model
             input.Close();
         }
 
+        /// <summary>
+        /// Loads a Linear Discriminant Analysis model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
+        public LdaModel(string fileName)
+        {
+            Load(fileName);
+        }
+
         /**
          * <summary> The calculateMetric method takes an {@link Instance} and a String as inputs. It returns the dot product of given Instance
          * and wi plus w0i.</summary>
          *
          * <param name="instance">{@link Instance} input.</param>
-         * <param name="Ci">      String input.</param>
+         * <param name="ci">      String input.</param>
          * <returns>The dot product of given Instance and wi plus w0i.</returns>
          */
         protected override double CalculateMetric(Instance.Instance instance, string ci)
         {
             var xi = instance.ToVector();
             var wi = w[ci];
-            var w0i = w0[ci];
-            return wi.DotProduct(xi) + w0i;
+            var w0I = w0[ci];
+            return wi.DotProduct(xi) + w0I;
         }
+        
+        /**
+         * <summary> Training algorithm for the linear discriminant analysis classifier (Introduction to Machine Learning, Alpaydin, 2015).</summary>
+         *
+         * <param name="trainSet">  Training data given to the algorithm.</param>
+         * <param name="parameters">-</param>
+         */
+        public override void Train(InstanceList.InstanceList trainSet, Parameter.Parameter parameters)
+        {
+            Vector averageVector;
+            w0 = new Dictionary<string, double>();
+            w = new Dictionary<string, Vector>();
+            priorDistribution = trainSet.ClassDistribution();
+            var classLists = trainSet.DivideIntoClasses();
+            var covariance = new Matrix(trainSet.Get(0).ContinuousAttributeSize(),
+                trainSet.Get(0).ContinuousAttributeSize());
+            for (var i = 0; i < classLists.Size(); i++)
+            {
+                averageVector = new Vector(classLists.Get(i).ContinuousAttributeAverage());
+                var classCovariance = classLists.Get(i).Covariance(averageVector);
+                classCovariance.MultiplyWithConstant(classLists.Get(i).Size() - 1);
+                covariance.Add(classCovariance);
+            }
+
+            covariance.DivideByConstant(trainSet.Size() - classLists.Size());
+            covariance.Inverse();
+
+            for (var i = 0; i < classLists.Size(); i++)
+            {
+                var ci = ((InstanceListOfSameClass) classLists.Get(i)).GetClassLabel();
+                averageVector = new Vector(classLists.Get(i).ContinuousAttributeAverage());
+                var wi = covariance.MultiplyWithVectorFromRight(averageVector);
+                w[ci] = wi;
+                var w0I = -0.5 * wi.DotProduct(averageVector) + System.Math.Log(priorDistribution.GetProbability(ci));
+                w0[ci] = w0I;
+            }
+
+        }
+
+        /// <summary>
+        /// Loads the Lda model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the Lda model.</param>
+        public override void LoadModel(string fileName)
+        {
+            Load(fileName);
+        }
+
     }
 }

@@ -18,22 +18,22 @@ namespace Classification.Experiment
         }
 
         /// <summary>
-        /// Runs a K fold cross-validated experiment for the given classifier with the given parameters. The experiment
+        /// Runs a K fold cross-validated experiment for the given model with the given parameters. The experiment
         /// results will be added to the experimentPerformance.
         /// </summary>
-        /// <param name="classifier">Classifier for the experiment</param>
-        /// <param name="parameter">Hyperparameters of the classifier of the experiment</param>
+        /// <param name="model">Model for the experiment</param>
+        /// <param name="parameter">Hyperparameters of the model of the experiment</param>
         /// <param name="experimentPerformance">Storage to add experiment results</param>
         /// <param name="crossValidation">K-fold crossvalidated dataset.</param>
-        protected void RunExperiment(Classifier.Classifier classifier, Parameter.Parameter parameter,
+        protected void RunExperiment(Model.Model model, Parameter.Parameter parameter,
             ExperimentPerformance experimentPerformance, CrossValidation<Instance.Instance> crossValidation)
         {
             for (var i = 0; i < k; i++)
             {
                 var trainSet = new InstanceList.InstanceList(crossValidation.GetTrainFold(i));
                 var testSet = new InstanceList.InstanceList(crossValidation.GetTestFold(i));
-                classifier.Train(trainSet, parameter);
-                experimentPerformance.Add(classifier.Test(testSet));
+                model.Train(trainSet, parameter);
+                experimentPerformance.Add(model.Test(testSet));
             }
         }
 
@@ -50,7 +50,7 @@ namespace Classification.Experiment
             var crossValidation = new KFoldCrossValidation<Instance.Instance>(experiment.GetDataSet().GetInstances(),
                 k, experiment.GetParameter().GetSeed());
 
-            RunExperiment(experiment.GetClassifier(), experiment.GetParameter(), result, crossValidation);
+            RunExperiment(experiment.GetModel(), experiment.GetParameter(), result, crossValidation);
             return result;
         }
     }

@@ -4,19 +4,19 @@ namespace Classification.Experiment
 {
     public class Experiment
     {
-        private readonly Classifier.Classifier _classifier;
+        private readonly Model.Model _model;
         private readonly Parameter.Parameter _parameter;
         private readonly DataSet.DataSet _dataSet;
 
         /**
          * <summary> Constructor for a specific machine learning experiment</summary>
-         * <param name="classifier">Classifier used in the machine learning experiment</param>
-         * <param name="parameter">Parameter(s) of the classifier.</param>
-         * <param name="dataSet">DataSet on which the classifier is run.</param>
+         * <param name="model">Classifier used in the machine learning experiment</param>
+         * <param name="parameter">Parameter(s) of the model.</param>
+         * <param name="dataSet">DataSet on which the model is run.</param>
          */
-        public Experiment(Classifier.Classifier classifier, Parameter.Parameter parameter, DataSet.DataSet dataSet)
+        public Experiment(Model.Model model, Parameter.Parameter parameter, DataSet.DataSet dataSet)
         {
-            this._classifier = classifier;
+            this._model = model;
             this._parameter = parameter;
             this._dataSet = dataSet;
         }
@@ -25,9 +25,9 @@ namespace Classification.Experiment
          * <summary> Accessor for the classifier attribute.</summary>
          * <returns>Classifier attribute.</returns>
          */
-        public Classifier.Classifier GetClassifier()
+        public Model.Model GetModel()
         {
-            return _classifier;
+            return _model;
         }
 
         /**
@@ -54,7 +54,7 @@ namespace Classification.Experiment
          * <returns>Experiment constructed</returns>
          */
         public Experiment FeatureSelectedExperiment(FeatureSubSet featureSubSet) {
-            return new Experiment(_classifier, _parameter, _dataSet.GetSubSetOfFeatures(featureSubSet));
+            return new Experiment(_model, _parameter, _dataSet.GetSubSetOfFeatures(featureSubSet));
         }
 
     }

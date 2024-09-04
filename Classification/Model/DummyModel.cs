@@ -7,27 +7,33 @@ namespace Classification.Model
 {
     public class DummyModel : Model
     {
-        private readonly DiscreteDistribution _distribution;
+        private DiscreteDistribution _distribution;
 
         /**
          * <summary> Constructor which sets the distribution using the given {@link InstanceList}.</summary>
-         *
-         * <param name="trainSet">{@link InstanceList} which is used to get the class distribution.</param>
          */
-        public DummyModel(InstanceList.InstanceList trainSet)
+        public DummyModel()
         {
-            _distribution = trainSet.ClassDistribution();
         }
 
         /// <summary>
         /// Loads a dummy model from an input model file.
         /// </summary>
         /// <param name="fileName">Model file name.</param>
-        public DummyModel(string fileName)
+        private void Load(string fileName)
         {
             var input = new StreamReader(fileName);
             _distribution = Model.LoadDiscreteDistribution(input);
             input.Close();
+        }
+        
+        /// <summary>
+        /// Loads a dummy model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
+        public DummyModel(string fileName)
+        {
+            Load(fileName);
         }
 
         /**
@@ -55,6 +61,27 @@ namespace Classification.Model
         public override Dictionary<string, double> PredictProbability(Instance.Instance instance)
         {
             return _distribution.GetProbabilityDistribution();
+        }
+
+        /**
+        * <summary> Training algorithm for the dummy classifier. Actually dummy classifier returns the maximum occurring class in
+        * the training data, there is no training.</summary>
+        *
+        * <param name="trainSet">  Training data given to the algorithm.</param>
+        * <param name="parameters">-</param>
+        */
+        public override void Train(InstanceList.InstanceList trainSet, Parameter.Parameter parameters)
+        {
+            _distribution = trainSet.ClassDistribution();
+        }
+
+        /// <summary>
+        /// Loads the dummy model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the dummy model.</param>
+        public override void LoadModel(string fileName)
+        {
+            Load(fileName);
         }
     }
 }

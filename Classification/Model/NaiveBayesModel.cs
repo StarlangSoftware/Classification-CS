@@ -1,43 +1,32 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Classification.Attribute;
+using Classification.InstanceList;
 using Math;
 
 namespace Classification.Model
 {
     public class NaiveBayesModel : GaussianModel
     {
-        private readonly Dictionary<string, Vector> _classMeans;
-        private readonly Dictionary<string, Vector> _classDeviations;
-        private readonly Dictionary<string, List<DiscreteDistribution>> _classAttributeDistributions;
+        private Dictionary<string, Vector> _classMeans;
+        private Dictionary<string, Vector> _classDeviations;
+        private Dictionary<string, List<DiscreteDistribution>> _classAttributeDistributions;
 
-        /**
-         * <summary> A constructor that sets the priorDistribution, classMeans and classDeviations.</summary>
-         *
-         * <param name="priorDistribution">{@link DiscreteDistribution} input.</param>
-         * <param name="classMeans">       A {@link HashMap} of String and {@link Vector}.</param>
-         * <param name="classDeviations">  A {@link HashMap} of String and {@link Vector}.</param>
-         */
-        public NaiveBayesModel(DiscreteDistribution priorDistribution, Dictionary<string, Vector> classMeans,
-            Dictionary<string, Vector> classDeviations)
+        public NaiveBayesModel()
         {
-            this.priorDistribution = priorDistribution;
-            _classMeans = classMeans;
-            _classDeviations = classDeviations;
         }
 
-        /**
-         * <summary> A constructor that sets the priorDistribution and classAttributeDistributions.</summary>
-         *
-         * <param name="priorDistribution">          {@link DiscreteDistribution} input.</param>
-         * <param name="classAttributeDistributions">{@link HashMap} of String and {@link ArrayList} of {@link DiscreteDistribution}s.</param>
-         */
-        public NaiveBayesModel(DiscreteDistribution priorDistribution,
-            Dictionary<string, List<DiscreteDistribution>> classAttributeDistributions)
+        /// <summary>
+        /// Loads a naive Bayes model from an input model file.
+        /// </summary>
+        /// <param name="fileName">Model file name.</param>
+        private void Load(string fileName)
         {
-            this.priorDistribution = priorDistribution;
-            _classAttributeDistributions = classAttributeDistributions;
+            var input = new StreamReader(fileName);
+            var size = LoadPriorDistribution(input);
+            _classMeans = LoadVectors(input, size);
+            _classDeviations = LoadVectors(input, size);
+            input.Close();
         }
 
         /// <summary>
@@ -46,11 +35,7 @@ namespace Classification.Model
         /// <param name="fileName">Model file name.</param>
         public NaiveBayesModel(string fileName)
         {
-            var input = new StreamReader(fileName);
-            var size = LoadPriorDistribution(input);
-            _classMeans = LoadVectors(input, size);
-            _classDeviations = LoadVectors(input, size);
-            input.Close();
+            Load(fileName);
         }
 
         /**
@@ -119,5 +104,68 @@ namespace Classification.Model
 
             return logLikelihood;
         }
+        
+        /**
+         * <summary> Training algorithm for Naive Bayes algorithm with a continuous data set.</summary>
+         *
+         * <param name="classLists">       Instances are divided into K lists, where each list contains only instances from a single class</param>
+         */
+        private void TrainContinuousVersion(Partition classLists)
+        {
+            _classMeans = new Dictionary<string, Vector>();
+            _classDeviations = new Dictionary<string, Vector>();
+            for (var i = 0; i < classLists.Size(); i++)
+            {
+                var classLabel = ((InstanceListOfSameClass) classLists.Get(i)).GetClassLabel();
+                var averageVector = classLists.Get(i).Average().ToVector();
+                _classMeans[classLabel] = averageVector;
+                var standardDeviationVector = classLists.Get(i).StandardDeviation().ToVector();
+                _classDeviations[classLabel] = standardDeviationVector;
+            }
+
+        }
+
+        /**
+         * <summary> Training algorithm for Naive Bayes algorithm with a discrete data set.</summary>
+         * <param name="classLists">Instances are divided into K lists, where each list contains only instances from a single class</param>
+         */
+        private void TrainDiscreteVersion(Partition classLists)
+        {
+            _classAttributeDistributions =
+                new Dictionary<string, List<DiscreteDistribution>>();
+            for (var i = 0; i < classLists.Size(); i++)
+            {
+                _classAttributeDistributions[((InstanceListOfSameClass) classLists.Get(i)).GetClassLabel()] = 
+                    classLists.Get(i).AllAttributesDistribution();
+            }
+
+        }
+
+        /**
+         * <summary> Training algorithm for Naive Bayes algorithm. It basically calls trainContinuousVersion for continuous data sets,
+         * trainDiscreteVersion for discrete data sets.</summary>
+         * <param name="trainSet">Training data given to the algorithm</param>
+         * <param name="parameters">-</param>
+         */
+        public override void Train(InstanceList.InstanceList trainSet, Parameter.Parameter parameters)
+        {
+            priorDistribution = trainSet.ClassDistribution();
+            var classLists = trainSet.DivideIntoClasses();
+            if (classLists.Get(0).Get(0).GetAttribute(0) is DiscreteAttribute){
+                TrainDiscreteVersion(classLists);
+            } else {
+                TrainContinuousVersion(classLists);
+            }
+        }
+
+        /// <summary>
+        /// Loads the naive Bayes model from an input file.
+        /// </summary>
+        /// <param name="fileName">File name of the naive Bayes model.</param>
+        public override void LoadModel(string fileName)
+        {
+            Load(fileName);
+        }
+
     }
 }
